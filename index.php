@@ -280,18 +280,18 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
       <!-- ===== END STATS ===== -->
 
       <!-- ===== ABOUT + PRINCIPAL ===== -->
-      <section style="margin:1.75rem 0;" data-aos="fade-up" data-aos-delay="50">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem;">
+      <section class="about-principal-section" style="margin:1.75rem 0;" data-aos="fade-up" data-aos-delay="50">
+        <div class="about-principal-grid">
 
           <!-- Principal Message -->
-          <div class="about-card">
+          <div class="about-card about-card-principal">
             <div class="section-header">
               <h2 class="section-title">প্রতিষ্ঠান প্রধানের বাণী</h2>
               <a href="head_teacher.php" class="section-link">আরও <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1.5fr; gap:1.5rem;">
+            <div class="principal-message-grid">
               <!-- Left: Photo + Info -->
-              <div style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+              <div class="principal-photo-col">
                 <?php if (!empty($head['photo'])): ?>
                 <img src="assets/images/<?php echo htmlspecialchars($head['photo']); ?>" alt="প্রধান শিক্ষক" style="width:140px; height:140px; border-radius:50%; object-fit:cover; border:4px solid #E8ECF3; margin-bottom:1rem;" loading="lazy" decoding="async">
                 <?php else: ?>
@@ -306,23 +306,23 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
               </div>
 
               <!-- Right: Message -->
-              <div style="display:flex; flex-direction:column;">
+              <div class="principal-text-col">
                 <p class="justified-text" style="font-size:0.87rem; color:#475569; line-height:1.7; flex:1;">
                   <?php
                     $message = $head['message'] ?? '';
                     echo nl2br(htmlspecialchars(mb_strlen($message) > 320 ? mb_substr($message, 0, 320) . '...' : $message));
                   ?>
                 </p>
-                <a href="head_teacher.php" class="btn-outline-modern" style="margin-top:1.25rem; font-size:0.82rem; align-self:flex-start;">
+                <a href="head_teacher.php" class="section-link" style="margin-top:1.25rem; font-size:0.82rem; align-self:flex-start;">
                   বিস্তারিত পড়ুন
-                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                 </a>
               </div>
             </div>
           </div>
 
           <!-- About School -->
-          <div class="about-card">
+          <div class="about-card about-card-school">
             <div class="section-header">
               <h2 class="section-title">প্রতিষ্ঠানের সম্পর্কে</h2>
               <a href="about.php" class="section-link">সব দেখুন <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
@@ -336,9 +336,9 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
                 echo nl2br(htmlspecialchars(mb_strlen($about_text) > 320 ? mb_substr($about_text, 0, 320) . '...' : $about_text));
               ?>
             </p>
-            <a href="about.php" class="btn-outline-modern" style="margin-top:1.25rem; font-size:0.82rem;">
+            <a href="about.php" class="section-link" style="margin-top:1.25rem; font-size:0.82rem;">
               বিস্তারিত পড়ুন
-              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
             </a>
           </div>
 
@@ -351,36 +351,41 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
         <div class="management-section-card">
           <div class="section-header" style="margin-bottom: 1.5rem; padding-bottom: 0.7rem; border-bottom: 2px solid #E8ECF3;">
             <h2 class="section-title">ব্যবস্থাপনা কমিটি</h2>
+            <a href="management_committee.php" class="section-link">সকল কমিটি সদস্য দেখুন <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
           </div>
           <div class="management-grid">
             
             <!-- President Column -->
             <div class="president-column">
-              <?php if (!empty($chairman['photo'])): ?>
-              <img src="assets/images/<?php echo htmlspecialchars($chairman['photo']); ?>" alt="সভাপতি" class="president-avatar" loading="lazy" decoding="async">
-              <?php else: ?>
-              <div class="president-avatar" style="display:flex; align-items:center; justify-content:center;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+              <div class="president-profile-col">
+                <?php if (!empty($chairman['photo'])): ?>
+                <img src="assets/images/<?php echo htmlspecialchars($chairman['photo']); ?>" alt="সভাপতি" class="president-avatar" loading="lazy" decoding="async">
+                <?php else: ?>
+                <div class="president-avatar" style="display:flex; align-items:center; justify-content:center;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#15803D" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+                </div>
+                <?php endif; ?>
+
+                <?php if (!empty($chairman['name'])): ?>
+                <div class="president-name-wrap">
+                  <div class="president-name"><?php echo htmlspecialchars($chairman['name']); ?></div>
+                  <div class="president-designation">সভাপতি</div>
+                </div>
+                <?php endif; ?>
               </div>
-              <?php endif; ?>
-              
-              <?php if (!empty($chairman['name'])): ?>
-              <div>
-                <div class="president-name"><?php echo htmlspecialchars($chairman['name']); ?></div>
-                <div class="president-designation">সভাপতি</div>
+
+              <div class="president-message-col">
+                <p class="president-message justified-text">
+                  <?php
+                    $message = $chairman['message'] ?? '';
+                    echo nl2br(htmlspecialchars(mb_strlen($message) > 320 ? mb_substr($message, 0, 320) . '...' : $message));
+                  ?>
+                </p>
+                <a href="chairman.php" class="section-link" style="margin-top:1rem; font-size:0.82rem; align-self:flex-start;">
+                  বিস্তারিত পড়ুন
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
               </div>
-              <?php endif; ?>
-              
-              <p class="president-message">
-                <?php
-                  $message = $chairman['message'] ?? '';
-                  echo nl2br(htmlspecialchars(mb_strlen($message) > 250 ? mb_substr($message, 0, 250) . '...' : $message));
-                ?>
-              </p>
-              
-              <a href="chairman.php" class="btn-outline-modern" style="align-self: center; font-size: 0.85rem; padding-inline: 1.25rem;">
-                বিস্তারিত পড়ুন →
-              </a>
             </div>
             
             <!-- Committee Column -->
@@ -420,11 +425,7 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
                 <?php endif; ?>
               </div>
               
-              <div class="committee-bottom-btn">
-                <a href="management_committee.php" class="btn-outline-modern" style="font-size: 0.875rem; padding-inline: 1.75rem;">
-                  সকল কমিটি সদস্য দেখুন →
-                </a>
-              </div>
+
             </div>
             
           </div>
@@ -488,7 +489,7 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
       <section style="margin:1.75rem 0;" data-aos="fade-up">
         <div class="about-card">
           <div class="section-header">
-            <h2 class="section-title">আমাদের শিক্ষার্থীদের অর্জন</h2>
+            <h2 class="section-title">STUDENTS OF THE YEAR</h2>
             <a href="student_of_the_year.php" class="section-link">সব দেখুন <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
           </div>
           <div class="swiper teachers-swiper" id="studentsSwiper">
@@ -515,9 +516,6 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
             </div>
             <div class="swiper-button-prev students-prev"></div>
             <div class="swiper-button-next students-next"></div>
-          </div>
-          <div style="text-align:center; margin-top:1.25rem;">
-            <a href="student_of_the_year.php" class="btn-outline-modern">আরও দেখুন</a>
           </div>
         </div>
       </section>
@@ -635,33 +633,36 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
             <h2 class="section-title">সর্বশেষ সংবাদ ও ইভেন্ট</h2>
             <a href="event.php" class="section-link">সব দেখুন <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
           </div>
-          <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1rem;">
+          <div class="news-grid-home" style="display:grid; grid-template-columns:repeat(3,1fr); gap:1rem;">
             <?php
-            $events_preview = $conn->query('SELECT * FROM events ORDER BY event_date DESC, id DESC LIMIT 3');
+            $events_preview = $conn->query('SELECT id, title, event_date, description FROM events ORDER BY event_date DESC, id DESC LIMIT 3');
             if ($events_preview && $events_preview->num_rows > 0):
               while ($event = $events_preview->fetch_assoc()):
                 $event_date = !empty($event['event_date']) ? date('d', strtotime($event['event_date'])) : '';
                 $event_month = !empty($event['event_date']) ? date('M', strtotime($event['event_date'])) : '';
                 $event_year  = !empty($event['event_date']) ? date('Y', strtotime($event['event_date'])) : '';
             ?>
-            <div class="news-card">
-              <?php if (!empty($event['image'])): ?>
-              <img src="assets/images/<?php echo htmlspecialchars($event['image']); ?>" alt="<?php echo htmlspecialchars($event['title']); ?>" style="width:100%; height:140px; object-fit:cover;" loading="lazy" decoding="async">
-              <?php endif; ?>
-              <div style="padding:0.85rem;">
-                <div style="display:flex; gap:0.6rem; align-items:flex-start; margin-bottom:0.6rem;">
-                  <?php if ($event_date): ?>
-                  <div class="news-date-badge">
-                    <div class="day"><?php echo $event_date; ?></div>
-                    <div class="month"><?php echo $event_month; ?></div>
+            <div class="news-card" style="height:100%;">
+              <div style="padding:0.85rem; height:100%; display:flex; flex-direction:column;">
+                <div style="display:grid; grid-template-columns:76px 1fr; gap:0.75rem; align-items:flex-start; flex:1;">
+                  <div style="display:flex; justify-content:center;">
+                    <?php if ($event_date): ?>
+                    <div class="news-date-badge" style="width:68px; min-height:68px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                      <div class="day" style="font-size:1rem; line-height:1;"><?php echo $event_date; ?></div>
+                      <div class="month" style="font-size:0.72rem; text-transform:uppercase;"><?php echo $event_month; ?></div>
+                    </div>
+                    <?php endif; ?>
                   </div>
-                  <?php endif; ?>
-                  <div>
-                    <div style="font-weight:700; font-size:0.88rem; color:#123B6A; line-height:1.35; margin-bottom:0.3rem;"><?php echo htmlspecialchars($event['title']); ?></div>
-                    <div style="font-size:0.78rem; color:#64748b;"><?php echo htmlspecialchars(mb_strimwidth(strip_tags($event['description']), 0, 80, '...')); ?></div>
+                  <div style="display:flex; flex-direction:column; flex:1; min-width:0;">
+                    <div style="font-weight:700; font-size:0.88rem; color:#123B6A; line-height:1.35; margin-bottom:0.35rem;"><?php echo htmlspecialchars($event['title']); ?></div>
+                    <div style="font-size:0.78rem; color:#64748b; line-height:1.5; min-height:3.9em; overflow:hidden; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; text-overflow:ellipsis;">
+                      <?php echo htmlspecialchars(mb_strimwidth(strip_tags($event['description']), 0, 110, '...')); ?>
+                    </div>
                   </div>
                 </div>
-                <a href="event_detail.php?id=<?php echo (int)$event['id']; ?>" class="btn-outline-modern" style="font-size:0.78rem; padding:0.4rem 0.9rem;">বিস্তারিত পড়ুন</a>
+                <div style="margin-top:0.75rem;">
+                  <a href="event_detail.php?id=<?php echo (int)$event['id']; ?>" class="section-link" style="font-size:0.78rem;">বিস্তারিত পড়ুন <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+                </div>
               </div>
             </div>
             <?php endwhile; else: ?>
@@ -894,13 +895,7 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
     main > div > div:first-child > section > div[style*="grid-template-columns:repeat(3"] {
       grid-template-columns: 1fr !important;
     }
-    main > div > div:first-child > section > div[style*="grid-template-columns:1fr 1fr"] {
-      grid-template-columns: 1fr !important;
-    }
   }
-</style>
-
-<?php include_once 'includes/footer.php'; ?>
 </style>
 
 <?php include_once 'includes/footer.php'; ?>

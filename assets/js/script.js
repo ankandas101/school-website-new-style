@@ -28,6 +28,14 @@ function initAOS() {
             easing: 'ease-out-cubic',
             once: true,
             offset: 50,
+            mirror: false,
+            disable: false,
+        });
+
+        document.querySelectorAll('[data-aos]').forEach(function (el) {
+            el.style.transitionDelay = el.getAttribute('data-aos-delay')
+                ? (parseInt(el.getAttribute('data-aos-delay'), 10) / 1000) + 's'
+                : '0s';
         });
     }
 }
@@ -65,16 +73,18 @@ function initTeachersSwiper() {
     var teachersEl = document.getElementById('teachersSwiper');
     if (!teachersEl) return;
     if (typeof Swiper === 'undefined') return;
+    var isMobile = window.matchMedia('(max-width: 768px)').matches;
     new Swiper('#teachersSwiper', {
         loop: true,
         autoplay: {
-            delay: 3400,
+            delay: isMobile ? 3500 : 3400,
             disableOnInteraction: false,
             pauseOnMouseEnter: true,
         },
         speed: 600,
         slidesPerView: 1,
         spaceBetween: 14,
+        allowTouchMove: true,
         breakpoints: {
             540:  { slidesPerView: 2, spaceBetween: 14 },
             1024: { slidesPerView: 3, spaceBetween: 18 },
@@ -95,16 +105,18 @@ function initStudentsSwiper() {
     var studentsEl = document.getElementById('studentsSwiper');
     if (!studentsEl) return;
     if (typeof Swiper === 'undefined') return;
+    var isMobile = window.matchMedia('(max-width: 768px)').matches;
     new Swiper('#studentsSwiper', {
         loop: true,
         autoplay: {
-            delay: 3800,
+            delay: isMobile ? 3600 : 3800,
             disableOnInteraction: false,
             pauseOnMouseEnter: true,
         },
         speed: 600,
         slidesPerView: 1,
         spaceBetween: 14,
+        allowTouchMove: true,
         breakpoints: {
             540:  { slidesPerView: 2, spaceBetween: 14 },
             1024: { slidesPerView: 3, spaceBetween: 18 },

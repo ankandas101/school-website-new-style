@@ -52,6 +52,17 @@ a { text-decoration: none; color: inherit; transition: all var(--transition-base
 img { max-width: 100%; height: auto; display: block; }
 button { font-family: inherit; cursor: pointer; }
 
+/* Smooth first-load reveal for cards/sections */
+[data-aos] {
+  opacity: 0;
+  transition-property: opacity, transform;
+  transition-duration: 0.6s;
+  transition-timing-function: ease-out;
+}
+[data-aos].aos-animate {
+  opacity: 1;
+}
+
 /* ===== ALPINE.JS X-CLOAK ===== */
 [x-cloak] { display: none !important; }
 
@@ -569,6 +580,32 @@ button { font-family: inherit; cursor: pointer; }
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
+
+/* About + Principal section grids */
+.about-principal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.principal-message-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 1.5rem;
+}
+
+.principal-photo-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.principal-text-col {
+  display: flex;
+  flex-direction: column;
+}
+
 .justified-text { text-align: justify; }
 
 /* ===== STAT CARDS ===== */
@@ -784,6 +821,12 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 /* ===== NEWS CARDS ===== */
+.news-grid-home {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
 .news-card {
   background: var(--white);
   border-radius: var(--radius-md);
@@ -1172,13 +1215,25 @@ button { font-family: inherit; cursor: pointer; }
   }
 
   .hero-text {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: 0;
+    width: 100%;
     max-width: 100%;
+    margin-left: 0;
     padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
   }
 
   .hero-text h1 {
     font-size: 2rem;
     line-height: 1.2;
+    max-width: 100%;
   }
 
   .hero-text p {
@@ -1261,13 +1316,25 @@ button { font-family: inherit; cursor: pointer; }
   }
 
   .hero-text {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: 0;
+    width: 100%;
     max-width: 100%;
+    margin-left: 0;
     padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
   }
 
   .hero-text h1 {
     font-size: 1.625rem;
     margin-bottom: var(--spacing-xs);
+    max-width: 100%;
   }
 
   .hero-text p {
@@ -1378,51 +1445,68 @@ button { font-family: inherit; cursor: pointer; }
 }
 .management-grid {
   display: grid;
-  grid-template-columns: 35% 65%;
-  gap: var(--spacing-xl);
+  grid-template-columns: minmax(0, 1.1fr) 350px;
+  gap: 1.25rem;
   align-items: start;
 }
 .president-column {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+.president-profile-col {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  align-items: center;
   text-align: center;
 }
+.president-message-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .president-avatar {
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   object-fit: cover;
   margin: 0 auto;
   box-shadow: 0 4px 16px rgba(21, 128, 61, 0.18);
-  border: 3px solid #ecfdf5;
+  border: 4px solid #E8ECF3;
   transition: all var(--transition-base);
 }
 .president-avatar:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 22px rgba(21, 128, 61, 0.24);
 }
+.president-name-wrap {
+  margin-top: 0.9rem;
+}
 .president-name {
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: #1E3A8A;
-  margin-bottom: var(--spacing-xs);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #123B6A;
+  margin-bottom: 0.3rem;
 }
 .president-designation {
-  font-size: 0.9375rem;
-  color: #15803D;
-  font-weight: 700;
+  font-size: 0.75rem;
+  color: #118847;
+  font-weight: 600;
   letter-spacing: 0.3px;
 }
 .president-message {
-  font-size: 0.9375rem;
-  color: var(--text-secondary);
+  font-size: 0.87rem;
+  color: #475569;
   line-height: 1.7;
+  margin: 0;
+  flex: 1;
 }
 .committee-column {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
+  align-self: stretch;
 }
 .committee-header {
   display: flex;
@@ -1519,3 +1603,110 @@ button { font-family: inherit; cursor: pointer; }
   margin-top: var(--spacing-sm);
   text-align: center;
 }
+@media (max-width: 767px) {
+  /* Students of the year */
+  .teacher-card .teacher-avatar {
+    width: 72px;
+    height: 72px;
+  }
+
+  .teacher-card .teacher-contact svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  /* Photo gallery + video gallery */
+  section div[style*="grid-template-columns:1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: var(--spacing-md) !important;
+  }
+
+  .gallery-item {
+    aspect-ratio: 4 / 3;
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: var(--spacing-xs) !important;
+  }
+
+  /* Video cards */
+  .video-card {
+    margin-bottom: var(--spacing-sm);
+  }
+
+  /* Events/news section */
+  section div[style*="grid-template-columns:repeat(3,1fr)"] {
+    grid-template-columns: 1fr !important;
+    gap: var(--spacing-md) !important;
+  }
+
+  .news-card img {
+    height: 160px;
+  }
+
+  .news-card > div {
+    padding: var(--spacing-md);
+  }
+
+  .news-date-badge {
+    min-width: 55px;
+    padding: var(--spacing-xs);
+  }
+
+  .news-date-badge .day {
+    font-size: 1.25rem;
+  }
+
+  .news-date-badge .month {
+    font-size: 0.7rem;
+  }
+
+  .news-card > div > div > div > div:first-child {
+    font-size: 0.875rem;
+  }
+
+  .news-card > div > div > div > div:last-child {
+    font-size: 0.75rem;
+  }
+
+  .btn-outline-modern {
+    font-size: 0.75rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  /* Sidebar - hidden on mobile, can be shown in a different way if needed */
+  aside {
+    display: none !important;
+  }
+
+  /* Footer */
+  .site-footer {
+    padding: var(--spacing-2xl) 0 0;
+    margin-top: var(--spacing-xl);
+  }
+
+  .footer-logo {
+    max-height: 50px;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .footer-heading {
+    font-size: 1rem;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .footer-link {
+    font-size: 0.8125rem;
+    padding: var(--spacing-xs) 0;
+  }
+
+  .footer-contact-item {
+    font-size: 0.8125rem;
+  }
+
+  .footer-social {
+    gap: var(--spacing-xs);
+  }
+}
+

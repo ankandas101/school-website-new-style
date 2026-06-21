@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 23, 2025 at 10:37 PM
+-- Generation Time: Jun 21, 2026 at 12:29 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -67,8 +67,7 @@ CREATE TABLE `admins` (
 --
 
 INSERT INTO `admins` (`id`, `username`, `password`, `name`, `email`, `is_superadmin`, `created_at`) VALUES
-(2, 'ankandas', '$2y$10$AX3o45F7qu1PuiTH9Poft.ouISFCnmLxEJGil81hZWO243rKloBa2', 'Ankan Das', 'ankan.cse22@gmail.com', 1, '2025-07-18 08:52:08'),
-(4, 'kksc', '$2y$10$vhzW92VjpXiJoHFQa1aoy.88ngp7dBcu8EzPihG12SAN/V9pUK3Ga', 'kamalkatisecondaryschool', 'info@kamalkatisecondaryschool.edu.bd', 0, '2025-08-07 20:19:42');
+(2, 'ankandas', '$2y$10$AX3o45F7qu1PuiTH9Poft.ouISFCnmLxEJGil81hZWO243rKloBa2', 'Ankan Das', 'ankan.cse22@gmail.com', 1, '2025-07-18 08:52:08');
 
 -- --------------------------------------------------------
 
@@ -191,6 +190,16 @@ CREATE TABLE `gallery_photos` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `gallery_photos`
+--
+
+INSERT INTO `gallery_photos` (`id`, `image`, `caption`, `status`, `created_at`) VALUES
+(21, 'gallery_1781863323_279.jpg', 'prayer', 1, '2026-06-19 10:02:03'),
+(22, 'gallery_1781863339_922.jpg', 'program', 1, '2026-06-19 10:02:19'),
+(23, 'gallery_1781863348_294.png', 'building', 1, '2026-06-19 10:02:28'),
+(24, 'gallery_1781863358_203.jpg', 'fastivle', 1, '2026-06-19 10:02:38');
+
 -- --------------------------------------------------------
 
 --
@@ -293,7 +302,15 @@ CREATE TABLE `management_committee` (
 INSERT INTO `management_committee` (`id`, `full_name`, `title`, `image`, `contact_number`, `joining_date`, `sort_order`, `created_at`, `updated_at`) VALUES
 (19, 'Mohammad ali', 'Parents', 'default.png', '01700000000', '2025-08-01', 100, '2025-08-28 00:16:38', '2025-08-28 00:16:38'),
 (20, 'A.K.M JAMSHER ALI', 'Member Secretary', 'default.png', '01700000000', '2025-08-28', 100, '2025-08-28 00:17:12', '2025-08-28 00:17:12'),
-(21, 'MD.JAHANGIR ALAM', 'Teacher Representative', 'default.png', '01700000000', '2025-08-01', 100, '2025-08-28 00:17:42', '2025-08-28 00:17:42');
+(21, 'MD.JAHANGIR ALAM', 'Teacher Representative', 'default.png', '01700000000', '2025-08-01', 100, '2025-08-28 00:17:42', '2025-08-28 00:17:42'),
+(22, 'Md. Abdul Karim', 'President', 'default.png', '01711111111', '2022-01-15', 1, '2026-06-20 16:19:03', '2026-06-20 16:19:03'),
+(23, 'Mrs. Shahana Akter', 'Vice President', 'default.png', '01822222222', '2022-02-10', 2, '2026-06-20 16:19:03', '2026-06-20 16:19:03'),
+(24, 'Md. Nazrul Islam', 'General Secretary', 'default.png', '01933333333', '2021-11-20', 3, '2026-06-20 16:19:03', '2026-06-20 16:19:03'),
+(25, 'Mohammad Saiful Alam', 'Treasurer', 'default.png', '01644444444', '2023-03-05', 4, '2026-06-20 16:19:03', '2026-06-20 16:19:03'),
+(26, 'Mrs. Farzana Rahman', 'Member', 'default.png', '01555555555', '2023-06-18', 5, '2026-06-20 16:19:03', '2026-06-20 16:19:03'),
+(27, 'Md. Jahangir Hossain', 'Member', 'default.png', '01766666666', '2022-09-12', 6, '2026-06-20 16:19:03', '2026-06-20 16:19:03'),
+(28, 'Anwara Begum', 'Guardian Representative', 'default.png', '01877777777', '2024-01-08', 7, '2026-06-20 16:19:03', '2026-06-20 16:19:03'),
+(29, 'Md. Rezaul Karim', 'Teacher Representative', 'default.png', '01988888888', '2021-08-25', 8, '2026-06-20 16:19:03', '2026-06-20 16:19:03');
 
 -- --------------------------------------------------------
 
@@ -360,7 +377,19 @@ CREATE TABLE `notices` (
 --
 
 INSERT INTO `notices` (`id`, `title`, `description`, `notice_date`, `status`, `created_at`, `show_in_ticker`, `attachment`) VALUES
-(10, 'নতুন ওয়েবসাইট এখন সম্পূর্ণরূপে চালু হয়েছে।', 'আমরা আনন্দের সাথে জানাচ্ছি যে হাতীবান্ধা আলিম মাদ্রাসার নতুন ওয়েবসাইট এখন সম্পূর্ণরূপে চালু হয়েছে।\r\nওয়েবসাইটের মাধ্যমে আপনি আমাদের মাদ্রাসার বিভিন্ন কার্যক্রম, শিক্ষাক্রম, ভর্তি সংক্রান্ত তথ্য এবং শিক্ষক-বৃত্তান্ত সহজেই জানতে পারবেন।\r\nসদা আমাদের ওয়েবসাইট ভিজিট করুন এবং শিক্ষাগত তথ্যের সর্বশেষ আপডেট পেতে থাকুন।', '2025-08-27', 1, '2025-08-27 18:43:12', 1, NULL);
+(10, 'নতুন ওয়েবসাইট এখন সম্পূর্ণরূপে চালু হয়েছে।', 'আমরা আনন্দের সাথে জানাচ্ছি যে হাতীবান্ধা আলিম মাদ্রাসার নতুন ওয়েবসাইট এখন সম্পূর্ণরূপে চালু হয়েছে।\r\nওয়েবসাইটের মাধ্যমে আপনি আমাদের মাদ্রাসার বিভিন্ন কার্যক্রম, শিক্ষাক্রম, ভর্তি সংক্রান্ত তথ্য এবং শিক্ষক-বৃত্তান্ত সহজেই জানতে পারবেন।\r\nসদা আমাদের ওয়েবসাইট ভিজিট করুন এবং শিক্ষাগত তথ্যের সর্বশেষ আপডেট পেতে থাকুন।', '2025-08-27', 1, '2025-08-27 18:43:12', 0, NULL),
+(15, 'বার্ষিক ক্রীড়া প্রতিযোগিতা ২০২৬', 'আগামী সপ্তাহের বুধবার মাদ্রাসার বার্ষিক ক্রীড়া প্রতিযোগিতা অনুষ্ঠিত হতে যাচ্ছে। আগ্রহীদের নাম জমা দেওয়ার অনুরোধ করা হলো।', '2026-01-12', 1, '2026-01-12 04:00:00', 0, 'sports_event_2026.pdf'),
+(16, 'শহীদ দিবস ও আন্তর্জাতিক মাতৃভাষা দিবস উদযাপন', '২১শে ফেব্রুয়ারি মহান শহীদ দিবস উপলক্ষে মাদ্রাসায় আলোচনা সভা ও দোয়া মাহফিলের আয়োজন করা হয়েছে।', '2026-02-18', 1, '2026-02-18 02:30:00', 0, NULL),
+(17, 'পরীক্ষার ফলাফল প্রকাশ (দাখিল নির্বাচনী পরীক্ষা)', '২০২৬ সালের দাখিল নির্বাচনী পরীক্ষার ফলাফল আগামী পরশু দিন দুপুর ১২:০০ টায় মাদ্রাসার নোটিশ বোর্ডে প্রকাশ করা হবে।', '2026-02-25', 1, '2026-02-25 08:10:22', 1, 'dakhil_result_2026.pdf'),
+(18, 'নতুন শিক্ষক নিয়োগ বিজ্ঞপ্তি', 'হাতীবান্ধা আলিম মাদ্রাসার শূন্য পদসমূহে আকর্ষণীয় বেতনে দক্ষ শিক্ষক নিয়োগ দেওয়া হবে। বিস্তারিত দেখুন সংযুক্ত ফাইলে।', '2026-03-01', 1, '2026-03-01 03:15:00', 0, 'job_circular_teachers.pdf'),
+(19, 'স্বাধীনতা দিবস উপলক্ষে রচনা প্রতিযোগিতা', '২৬শে মার্চ মহান স্বাধীনতা দিবস উপলক্ষে \"স্বাধীনতার গুরুত্ব\" বিষয়ে একটি উন্মুক্ত রচনা প্রতিযোগিতার আয়োজন করা হয়েছে।', '2026-03-20', 1, '2026-03-20 05:45:12', 0, 'essay_competition_rules.pdf'),
+(20, 'গ্রীষ্মকালীন অবকাশ ও নোটিশ', 'তীব্র তাপদাহ এবং সরকারি নির্দেশনা মোতাবেক মাদ্রাসার সকল ক্লাস আগামী ১ সপ্তাহ স্থগিত থাকবে।', '2026-04-15', 1, '2026-04-15 07:00:00', 0, NULL),
+(21, 'মাদ্রাসার গভর্নিং বডির জরুরী সভা', 'আগামী শনিবার সকাল ১০:০০ ঘটিকায় মাদ্রাসার কার্যালয়ে গভর্নিং বডির এক জরুরী সাধারণ সভা আহ্বান করা হয়েছে।', '2026-05-02', 1, '2026-05-02 10:20:00', 0, NULL),
+(22, 'অনলাইন ক্লাস সংক্রান্ত নির্দেশিকা', 'বিশেষ কারণে সাময়িকভাবে আমাদের কিছু ক্লাস অনলাইনে জুমে (Zoom) নেওয়া হবে। আইডি ও পাসওয়ার্ড ডেসক্রিপশনে দেখুন।', '2026-05-10', 1, '2026-05-10 01:45:30', 1, 'online_class_schedule.pdf'),
+(23, 'জাতীয় শোক দিবস ও দোয়া মাহফিল', '১৫ই আগস্ট জাতীয় শোক দিবস উপলক্ষে মাদ্রাসার মিলনায়তনে আলোচনা সভা, কোরআন খতম ও বিশেষ দোয়ার আয়োজন করা হয়েছে।', '2026-08-12', 1, '2026-08-12 04:11:14', 0, NULL),
+(24, 'পুরাতন নোটিশ (টেস্টিং আর্কাইভ)', 'এটি একটি পুরাতন নোটিশ যা আর্কাইভ এবং ড্রাফট সিস্টেম পরীক্ষা করার জন্য ডাটাবেজে রাখা হয়েছে।', '2025-12-01', 0, '2025-12-01 06:00:00', 0, NULL),
+(25, 'বার্ষিক মিলাদ মাহফিল ও পুরস্কার বিতরণী', 'আগামী মাসের প্রথম সপ্তাহে মাদ্রাসার বার্ষিক মিলাদ মাহফিল এবং কৃতি শিক্ষার্থীদের মাঝে পুরস্কার বিতরণ করা হবে।', '2026-09-05', 1, '2026-09-05 09:30:00', 1, 'annual_program.pdf'),
+(26, 'শীতকালীন ছুটির নোটিশ', 'আগামী ২৪শে ডিসেম্বর থেকে শুরু করে ২রা জানুয়ারি পর্যন্ত শীতকালীন ছুটি উপলক্ষে মাদ্রাসার সকল কার্যক্রম বন্ধ থাকবে।', '2026-12-20', 1, '2026-12-20 03:00:00', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -425,6 +454,31 @@ CREATE TABLE `routines` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `schedules`
+--
+
+CREATE TABLE `schedules` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `time_value` varchar(100) NOT NULL,
+  `sort_order` int(11) DEFAULT 0,
+  `status` tinyint(4) DEFAULT 1,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `schedules`
+--
+
+INSERT INTO `schedules` (`id`, `title`, `time_value`, `sort_order`, `status`, `updated_at`) VALUES
+(1, 'ক্লাস শুরু', '০৮:০০ AM', 1, 1, '2026-06-19 09:30:47'),
+(2, 'টিফিন বিরতি', '০১:০০ PM - ০২:০০ PM', 2, 1, '2026-06-19 09:30:47'),
+(3, 'ক্লাস শেষ', '০৪:০০ PM', 3, 1, '2026-06-19 09:30:47'),
+(4, 'অফিস সময়', '০৯:০০ AM - ০৫:০০ PM', 4, 1, '2026-06-19 09:30:47');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `school_info`
 --
 
@@ -450,7 +504,34 @@ CREATE TABLE `school_info` (
 --
 
 INSERT INTO `school_info` (`id`, `school_name`, `logo`, `banner`, `eiin`, `about`, `updated_at`, `established`, `address`, `phone`, `email`, `mpo_code`, `school_code`, `google_map`) VALUES
-(1, 'হাতীবান্ধা আলিম মাদ্রাসা', 'logo_1756316800_176.png', 'banner_1756316800_782.png', '122818', 'হাতীবান্ধা আলিম মাদ্রাসা, উপজেলা হাতীবান্ধা, জেলা লালমনিরহাট একটি অগ্রণী ধর্মীয় ও সাধারণ শিক্ষাপ্রতিষ্ঠান। স্কুলটি  প্রতিষ্ঠার পর থেকে মাদ্রাসাটি ইসলামী শিক্ষার প্রসার, চারিত্রিক গুণাবলির বিকাশ এবং আধুনিক জ্ঞানচর্চার মাধ্যমে শিক্ষার্থীদের আলোকিত ও আদর্শ নাগরিক হিসেবে গড়ে তোলার লক্ষ্যে নিরলসভাবে কাজ করে যাচ্ছে।\r\nএখানে অভিজ্ঞ ও যোগ্য শিক্ষকমণ্ডলীর তত্ত্বাবধানে শিক্ষার্থীরা কুরআন-হাদিস, আরবি সাহিত্য, ইসলামিক স্টাডিজসহ সাধারণ বিষয়েও শিক্ষা গ্রহণ করে থাকে। একই সাথে আধুনিক তথ্যপ্রযুক্তি ও সমসাময়িক জ্ঞানচর্চার সুযোগ থাকায় শিক্ষার্থীরা নিজেদের যোগ্যতা ও প্রতিভা বিকাশের সুবর্ণ সুযোগ পাচ্ছে।', '2025-09-02 12:22:13', '1979', 'পোস্ট: হাতীবান্ধা-5030, উপজেলা: হাতীবান্ধা, জেলা: লালমনিরহাট', '01309118559', 'hatibandhaalm122818@gmail.com', '8902012202', '1185592', '<div style=\"width: 100%\"><iframe width=\"100%\" height=\"600\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=Hatibandha%20Alim%20Madrasah+(Hatibandha%20Alim%20Madrasah)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed\"><a href=\"https://www.mapsdirections.info/fr/calculer-la-population-sur-une-carte\">mesurer la population sur une carte</a></iframe></div>');
+(1, 'হাতীবান্ধা আলিম মাদ্রাসা', 'logo_1756316800_176.png', 'banner_1756316800_782.png', '122818', 'হাতীবান্ধা আলিম মাদ্রাসা, উপজেলা হাতীবান্ধা, জেলা লালমনিরহাট একটি অগ্রণী ধর্মীয় ও সাধারণ শিক্ষাপ্রতিষ্ঠান। স্কুলটি  প্রতিষ্ঠার পর থেকে মাদ্রাসাটি ইসলামী শিক্ষার প্রসার, চারিত্রিক গুণাবলির বিকাশ এবং আধুনিক জ্ঞানচর্চার মাধ্যমে শিক্ষার্থীদের আলোকিত ও আদর্শ নাগরিক হিসেবে গড়ে তোলার লক্ষ্যে নিরলসভাবে কাজ করে যাচ্ছে।\nএখানে অভিজ্ঞ ও যোগ্য শিক্ষকমণ্ডলীর তত্ত্বাবধানে শিক্ষার্থীরা কুরআন-হাদিস, আরবি সাহিত্য, ইসলামিক স্টাডিজসহ সাধারণ বিষয়েও শিক্ষা গ্রহণ করে থাকে। একই সাথে আধুনিক তথ্যপ্রযুক্তি ও সমসাময়িক জ্ঞানচর্চার সুযোগ থাকায় শিক্ষার্থীরা নিজেদের যোগ্যতা ও প্রতিভা বিকাশের সুবর্ণ সুযোগ পাচ্ছে।', '2026-06-20 10:07:21', '1979', 'পোস্ট: হাতীবান্ধা-5030, উপজেলা: হাতীবান্ধা, জেলা: লালমনিরহাট', '01309118559', 'hatibandhaalm122818@gmail.com', '8902012202', '1185592', '<div style=\"width: 100%\"><iframe width=\"100%\" height=\"600\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=Hatibandha%20Alim%20Madrasah+(Hatibandha%20Alim%20Madrasah)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed\"><a href=\"https://www.mapsdirections.info/fr/calculer-la-population-sur-une-carte\">mesurer la population sur une carte</a></iframe></div>');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `school_statistics`
+--
+
+CREATE TABLE `school_statistics` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `value` varchar(50) NOT NULL,
+  `suffix` varchar(20) DEFAULT NULL,
+  `sort_order` int(11) NOT NULL DEFAULT 1,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `school_statistics`
+--
+
+INSERT INTO `school_statistics` (`id`, `title`, `value`, `suffix`, `sort_order`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'শিক্ষার্থী', '500', '+', 1, 1, '2026-06-20 10:56:06', '2026-06-20 10:59:17'),
+(2, 'শিক্ষক', '20', '+', 2, 1, '2026-06-20 10:56:06', '2026-06-20 10:59:22'),
+(3, 'বছরের ঐতিহ্য', '50', '+', 3, 1, '2026-06-20 10:56:06', '2026-06-20 10:59:27'),
+(4, 'পাশের হার', '99', '%', 4, 1, '2026-06-20 10:56:06', '2026-06-20 10:59:31');
 
 -- --------------------------------------------------------
 
@@ -493,16 +574,6 @@ CREATE TABLE `sidebar_widgets` (
   `status` tinyint(1) DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `sidebar_widgets`
---
-
-INSERT INTO `sidebar_widgets` (`id`, `type`, `title`, `content`, `sort_order`, `status`, `created_at`) VALUES
-(1, 'image', 'Hotline', 'sidebar_1752768417_309.png', 0, 1, '2025-07-17 16:06:57'),
-(5, 'html', 'Our Location', '<div style=\"width: 100%\"><iframe width=\"100%\" height=\"300\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=Kamal%20Kati%20High%20School%20H36V+QM8+(Kamal%20Kati%20High%20School)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed\"><a href=\"https://www.mapsdirections.info/fr/calculer-la-population-sur-une-carte\">Carte démographique</a></iframe></div>', 4, 1, '2025-08-07 20:59:48'),
-(6, 'html', 'calendar 2025', '<div class=\"calendar-section\">\r\n<iframe src=\"https://calendar.google.com/calendar/embed?height=300&wkst=7&ctz=Asia%2FBishkek&showPrint=0&title&src=c2Nob29sMTE4NTU5QGdtYWlsLmNvbQ&src=ZW4uYmQjaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%23039be5&color=%230b8043\" \r\n                    style=\"border:solid 1px #777\" \r\n                    width=\"auto\" height=\"300\" \r\n                    frameborder=\"0\" scrolling=\"no\">\r\n            </iframe>\r\n</div>', 3, 1, '2025-08-09 15:35:29'),
-(10, 'html', 'নামাজের সময়', '<iframe src=\"https://timesprayer.com/widgets.php?frame=1&amp;lang=en&amp;name=rangpur&amp;avachang=true\" style=\"border: none; overflow: hidden; width: 100%; height: 200px;\"></iframe>', 3, 1, '2025-08-27 18:41:39');
 
 -- --------------------------------------------------------
 
@@ -550,8 +621,8 @@ CREATE TABLE `sliders` (
 --
 
 INSERT INTO `sliders` (`id`, `image`, `caption_title`, `caption_text`, `sort_order`, `status`, `created_at`) VALUES
-(20, 'slider_1766525495_570.png', '', '', 0, 1, '2025-12-23 21:31:35'),
-(21, 'slider_1766525554_651.png', '', '', 0, 1, '2025-12-23 21:32:34');
+(22, 'slider_1781869155_414.jpg', 'Home Slider', 'Hatibandha Alim Madrasha building', 0, 1, '2026-06-19 11:39:15'),
+(23, 'slider_1781869163_928.jpg', '', '', 0, 1, '2026-06-19 11:39:23');
 
 -- --------------------------------------------------------
 
@@ -761,9 +832,21 @@ ALTER TABLE `routines`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `schedules`
+--
+ALTER TABLE `schedules`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `school_info`
 --
 ALTER TABLE `school_info`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `school_statistics`
+--
+ALTER TABLE `school_statistics`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -860,7 +943,7 @@ ALTER TABLE `forms`
 -- AUTO_INCREMENT for table `gallery_photos`
 --
 ALTER TABLE `gallery_photos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `gallery_videos`
@@ -878,7 +961,7 @@ ALTER TABLE `important_links`
 -- AUTO_INCREMENT for table `management_committee`
 --
 ALTER TABLE `management_committee`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `messages`
@@ -896,7 +979,7 @@ ALTER TABLE `meta_code`
 -- AUTO_INCREMENT for table `notices`
 --
 ALTER TABLE `notices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `results`
@@ -915,6 +998,18 @@ ALTER TABLE `result_archives`
 --
 ALTER TABLE `routines`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `schedules`
+--
+ALTER TABLE `schedules`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `school_statistics`
+--
+ALTER TABLE `school_statistics`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `seo_settings`
@@ -938,7 +1033,7 @@ ALTER TABLE `site_settings`
 -- AUTO_INCREMENT for table `sliders`
 --
 ALTER TABLE `sliders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `student_info`

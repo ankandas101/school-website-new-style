@@ -30,7 +30,7 @@ $statistics = $schoolStats->getActive();
             </div>
           <?php endif; ?>
           <div>
-            <p class="text-green-400 text-sm font-semibold tracking-wider uppercase mb-1">প্রতিষ্ঠান সম্পর্কে</p>
+        <!-- <p class="text-green-400 text-sm font-semibold tracking-wider uppercase mb-1">প্রতিষ্ঠান সম্পর্কে</p> -->
             <h1 class="text-4xl md:text-5xl font-bold text-white leading-tight">
               <?php echo htmlspecialchars($school_info['school_name'] ?? 'বিদ্যালয়'); ?>
             </h1>
