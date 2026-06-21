@@ -99,8 +99,8 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
               <!-- Hero Text -->
               <div class="hero-text">
                 <?php if ($i === 0): ?>
-                <h1><?php echo htmlspecialchars($school_info['school_name'] ?? ''); ?></h1>
-                <p>জ্ঞান, নৈতিকতা ও উন্নতির পথে—আদর্শ মানুষ গড়ার অঙ্গীকারে</p>
+                <h1><?php echo htmlspecialchars($school_info['school_name'] ?? env('SCHOOL_NAME')); ?></h1>
+                <p><?php echo htmlspecialchars(env('HERO_TAG_LINE')); ?></p>
                 <!-- Meta Badges -->
                 <div class="hero-meta">
                   <?php if (!empty($school_info['established'])): ?>
@@ -115,12 +115,10 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
                     EIIN: <?php echo htmlspecialchars($school_info['eiin']); ?>
                   </div>
                   <?php endif; ?>
-                  <?php if (!empty($footer_info['address'])): ?>
                   <div class="hero-meta-item">
                     <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    <?php echo htmlspecialchars(mb_substr($footer_info['address'], 0, 40)); ?>
+                    <?php echo htmlspecialchars( env('HERO_LOCATION')); ?>
                   </div>
-                  <?php endif; ?>
                 </div>
                 <!-- Buttons -->
                 <div class="hero-buttons">
@@ -249,14 +247,14 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
             <div class="stat-icon" style="background:#e8f5ee;">
               <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#118847" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
-            <div class="stat-number">২,০০০+</div>
+            <div class="stat-number">৫০০+</div>
             <div class="stat-label">শিক্ষার্থী</div>
           </div>
           <div class="stat-card">
             <div class="stat-icon" style="background:#eff6ff;">
               <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
             </div>
-            <div class="stat-number">৮০+</div>
+            <div class="stat-number">2০+</div>
             <div class="stat-label">শিক্ষক</div>
           </div>
           <div class="stat-card">
@@ -489,7 +487,7 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
       <section style="margin:1.75rem 0;" data-aos="fade-up">
         <div class="about-card">
           <div class="section-header">
-            <h2 class="section-title">STUDENTS OF THE YEAR</h2>
+            <h2 class="section-title">কৃতি শিক্ষার্থী</h2>
             <a href="student_of_the_year.php" class="section-link">সব দেখুন <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
           </div>
           <div class="swiper teachers-swiper" id="studentsSwiper">
@@ -532,7 +530,7 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
               <h2 class="section-title">ফটো গ্যালারি</h2>
               <a href="photo_gallery.php" class="section-link">সব দেখুন <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
             </div>
-            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
+            <div class="photo-gallery-grid" style="display:grid; gap:6px; width:100%;">
               <?php
               $photos_preview = $conn->query('SELECT * FROM gallery_photos WHERE status=1 ORDER BY id DESC LIMIT 6');
               if ($photos_preview && $photos_preview->num_rows > 0):
@@ -678,7 +676,7 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
     <aside style="width:300px; flex-shrink:0;" class="hidden lg:block">
 
       <!-- NOTICE BOARD (hidden on lg, shown on hero) -->
-      <div class="sidebar-widget hidden" data-aos="fade-left">
+      <div class="sidebar-widget hidden" data-aos="fade-left" style="--sidebar-widget-border:#e53e3e;">
         <div class="sidebar-widget-header" style="background:#e53e3e; color:#fff;">
           <div style="display:flex; align-items:center; gap:6px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
@@ -718,7 +716,7 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
       </div>
 
       <!-- SCHOOL SCHEDULE -->
-      <div class="sidebar-widget" data-aos="fade-left" data-aos-delay="50">
+      <div class="sidebar-widget" data-aos="fade-left" data-aos-delay="50" style="--sidebar-widget-border:#0f52ba;">
         <div class="sidebar-widget-header" style="background:#0f52ba; color:#fff;">
           <div style="display:flex; align-items:center; gap:6px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -742,7 +740,7 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
       </div>
 
       <!-- QUICK LINKS -->
-      <div class="sidebar-widget" data-aos="fade-left" data-aos-delay="100">
+      <div class="sidebar-widget" data-aos="fade-left" data-aos-delay="100" style="--sidebar-widget-border:#118847;">
         <div class="sidebar-widget-header" style="background:#118847; color:#fff;">
           <div style="display:flex; align-items:center; gap:6px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
@@ -767,7 +765,7 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
       </div>
 
       <!-- STUDENT CORNER -->
-      <div class="sidebar-widget" data-aos="fade-left" data-aos-delay="150">
+      <div class="sidebar-widget" data-aos="fade-left" data-aos-delay="150" style="--sidebar-widget-border:#123B6A;">
         <div class="sidebar-widget-header" style="background:#123B6A; color:#fff;">
           <div style="display:flex; align-items:center; gap:6px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -789,7 +787,7 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
       $links = $importantLinks->getActive();
       if ($links && $links->num_rows > 0):
       ?>
-      <div class="sidebar-widget" data-aos="fade-left" data-aos-delay="200">
+      <div class="sidebar-widget" data-aos="fade-left" data-aos-delay="200" style="--sidebar-widget-border:#e53e3e;">
         <div class="sidebar-widget-header" style="background:#e53e3e; color:#fff;">
           <div style="display:flex; align-items:center; gap:6px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
@@ -808,7 +806,7 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
       <?php endif; ?>
 
       <!-- LATEST FORMS -->
-      <div class="sidebar-widget" data-aos="fade-left" data-aos-delay="250">
+      <div class="sidebar-widget" data-aos="fade-left" data-aos-delay="250" style="--sidebar-widget-border:#6366f1;">
         <div class="sidebar-widget-header" style="background:#6366f1; color:#fff;">
           <div style="display:flex; align-items:center; gap:6px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -830,27 +828,36 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
       </div>
 
       <!-- OUR LOCATION -->
-      <div class="sidebar-widget" data-aos="fade-left" data-aos-delay="300">
+      <div class="sidebar-widget" data-aos="fade-left" data-aos-delay="300" style="--sidebar-widget-border:#118847;">
         <div class="sidebar-widget-header" style="background:#118847; color:#fff;">
           <div style="display:flex; align-items:center; gap:6px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            আমাদের অবস্থান
+            আমাদের লোকেশন
           </div>
         </div>
         <div class="sidebar-widget-body">
-          <div style="display:flex; align-items:flex-start; gap:0.6rem;">
+          <div style="display:flex; align-items:flex-start; gap:0.6rem; width:100%;">
             <div style="width:32px; height:32px; background:#e8f5ee; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#118847" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#118847" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             </div>
-            <div style="font-size:0.82rem; color:#475569; line-height:1.55;"><?php echo htmlspecialchars($footer_info['address'] ?? ''); ?></div>
+            <div style="flex:1 1 auto; min-width:0; width:100%;">
+              <div style="font-size:0.82rem; color:#475569; line-height:1.55; word-break:break-word;"><?php echo htmlspecialchars($footer_info['address'] ?? ''); ?></div>
+            </div>
           </div>
+            <?php if (!empty($school_info['google_map'])): ?>
+              <div style="width:100%; max-width:100%; margin-top:0.6rem; border-radius:10px; overflow:hidden; border:1px solid #e2e8f0; background:#f8fafc;">
+                <div style="width:100%; max-width:100%;max-height: 150px; display:block; ">
+                  <?php echo $school_info['google_map']; ?>
+                </div>
+              </div>
+              <?php endif; ?>
         </div>
       </div>
 
       <!-- DYNAMIC SIDEBAR WIDGETS -->
       <?php if ($sidebar_widgets && $sidebar_widgets->num_rows > 0): while ($widget = $sidebar_widgets->fetch_assoc()): ?>
         <?php if ($widget['type'] === 'image'): ?>
-        <div class="sidebar-widget" data-aos="fade-left">
+        <div class="sidebar-widget" data-aos="fade-left" style="--sidebar-widget-border:#123B6A;">
           <?php if (!empty($widget['title'])): ?>
           <div class="sidebar-widget-header" style="background:#123B6A; color:#fff;">
             <span><?php echo htmlspecialchars($widget['title']); ?></span>
@@ -861,7 +868,7 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
           </div>
         </div>
         <?php elseif ($widget['type'] === 'html'): ?>
-        <div class="sidebar-widget" data-aos="fade-left">
+        <div class="sidebar-widget" data-aos="fade-left" style="--sidebar-widget-border:#123B6A;">
           <?php if (!empty($widget['title'])): ?>
           <div class="sidebar-widget-header" style="background:#123B6A; color:#fff;">
             <span><?php echo htmlspecialchars($widget['title']); ?></span>

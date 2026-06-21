@@ -13,14 +13,14 @@ $total_row = $total_result ? $total_result->fetch_assoc() : ['total' => 0];
 $total_notices = $total_row['total'];
 
 // Fetch notices for this page
-$sql = 'SELECT * FROM notices WHERE status=1 ORDER BY notice_date DESC, id DESC LIMIT ? OFFSET ?';
+$sql = 'SELECT * FROM notices WHERE status=1 ORDER BY notice_date IS NULL, notice_date DESC, id DESC LIMIT ? OFFSET ?';
 $stmt = $conn->prepare($sql);
 $stmt->bind_param('ii', $per_page, $offset);
 $stmt->execute();
 $result = $stmt->get_result();
 
-$page_title = 'নোটিশ';
-$page_desc = 'সকল নোটিশ দেখুন';
+$page_title = 'নোটিশ | বিদ্যালয়ের জন্য সর্বশেষ নোটিশ ও বিজ্ঞপ্তি';
+$page_desc  = 'আমাদের বিদ্যালয়ের সর্বশেষ নোটিশ, বিজ্ঞপ্তি, ভর্তি সংক্রান্ত তথ্য, পরীক্ষার রুটিন, ফলাফল এবং অন্যান্য গুরুত্বপূর্ণ ঘোষণা একসাথে দেখুন।';
 
 include_once 'includes/header.php';
 ?>
@@ -104,14 +104,19 @@ include_once 'includes/header.php';
 
 .notice-excerpt {
   color: #475569;
-  line-height: 1.6;
-  margin-bottom: 1rem;
+  line-height: 1.5;
+  margin-bottom: 0.9rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .notice-footer {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 .notice-link {
@@ -199,7 +204,11 @@ include_once 'includes/header.php';
 /* Responsive */
 @media (max-width: 640px) {
   .notices-section {
-    padding: 2rem 1rem;
+    padding: 1.5rem 0.75rem;
+  }
+  
+  .page-header {
+    margin-bottom: 1.5rem;
   }
   
   .page-header h1 {
@@ -207,18 +216,52 @@ include_once 'includes/header.php';
   }
   
   .notice-card {
-    padding: 1.5rem;
+    padding: 1rem;
+    border-radius: 14px;
   }
   
   .notice-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .notice-title {
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+  
+  .notice-date {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.78rem;
+  }
+  
+  .notice-excerpt {
+    font-size: 0.88rem;
+    -webkit-line-clamp: 2;
+    margin-bottom: 0.75rem;
+  }
+  
+  .notice-footer {
+    gap: 0.5rem;
+  }
+  
+  .notice-link,
+  .notice-attachment {
+    padding: 0.6rem 0.9rem;
+    font-size: 0.84rem;
+  }
+  
+  .pagination {
+    gap: 0.5rem;
+    margin-top: 2rem;
   }
   
   .pagination a,
   .pagination span {
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
+    padding: 0.55rem 0.9rem;
+    font-size: 0.88rem;
   }
 }
 </style>
@@ -246,8 +289,9 @@ include_once 'includes/header.php';
           <p class="notice-excerpt"><?php echo htmlspecialchars(mb_substr(strip_tags($notice['description']), 0, 150)); ?><?php if (mb_strlen(strip_tags($notice['description'])) > 150) echo '...'; ?></p>
           
           <div class="notice-footer">
-            <a href="notice.php?id=<?php echo $notice['id']; ?>" class="notice-link">
-              পূর্ণ বিবরণ →
+            <a href="notice.php?id=<?php echo (int)$notice['id']; ?>" class="section-link" style="font-size:0.78rem;">
+              বিস্তারিত পড়ুন
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
             </a>
             
             <?php if (!empty($notice['attachment'])): ?>

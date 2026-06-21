@@ -10,7 +10,7 @@ $copyright_text = "&copy; $current_year Ankan Das. All rights reserved.";
 <head>
     <meta charset="UTF-8" />
     <title>Best School Management System in Bangladesh by KhulnaDevs (Ankan Das)</title>
-    <meta name="description" content="Ankan Das KhulnaDevs এর তৈরি, বাংলাদেশ এর অন্যতম সেরা স্কুল ম্যানেজমেন্ট সিস্টেম। ankandas.me and KhulnaDevs is software company in Khulna bangladesh" />
+    <meta name="description" content="this site by developer Ankan Das from KhulnaDevs, বাংলাদেশ এর অন্যতম সেরা স্কুল ম্যানেজমেন্ট সিস্টেম। ankandas.me and KhulnaDevs is software company in Khulna bangladesh" />
     <meta name="keywords" content="Khulna Devs,ankandas.me, best School Management System Bangladesh, স্কুল ম্যানেজমেন্ট সিস্টেম, School ERP, স্কুল সফটওয়্যার, অনলাইন স্কুল ম্যানেজমেন্ট" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="assets/images/favicon.ico">

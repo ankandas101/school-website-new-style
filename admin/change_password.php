@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../includes/db.php';
+require_once '../includes/csrf.php';
 define('ADMIN_SESSION', 'admin_logged_in');
 
 // Auth check
@@ -33,21 +34,25 @@ $admin_id = $_SESSION[ADMIN_SESSION];
 $success = $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $current = $_POST['current_password'] ?? '';
-    $new = $_POST['new_password'] ?? '';
-    $confirm = $_POST['confirm_password'] ?? '';
-    $row = $admin->getById($admin_id);
-    if (!$row || !password_verify($current, $row['password'])) {
-        $error = 'Current password is incorrect.';
-    } elseif (strlen($new) < 6) {
-        $error = 'New password must be at least 6 characters.';
-    } elseif ($new !== $confirm) {
-        $error = 'New passwords do not match.';
+    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+        $error = 'Invalid security token. Please try again.';
     } else {
-        if ($admin->updatePassword($admin_id, $new)) {
-            $success = 'Password changed successfully!';
+        $current = $_POST['current_password'] ?? '';
+        $new = $_POST['new_password'] ?? '';
+        $confirm = $_POST['confirm_password'] ?? '';
+        $row = $admin->getById($admin_id);
+        if (!$row || !password_verify($current, $row['password'])) {
+            $error = 'Current password is incorrect.';
+        } elseif (strlen($new) < 6) {
+            $error = 'New password must be at least 6 characters.';
+        } elseif ($new !== $confirm) {
+            $error = 'New passwords do not match.';
         } else {
-            $error = 'Failed to change password.';
+            if ($admin->updatePassword($admin_id, $new)) {
+                $success = 'Password changed successfully!';
+            } else {
+                $error = 'Failed to change password.';
+            }
         }
     }
 }
@@ -76,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if ($success): ?><div class="alert alert-success"><?php echo $success; ?></div><?php endif; ?>
         <?php if ($error): ?><div class="alert alert-danger"><?php echo $error; ?></div><?php endif; ?>
         <form method="post" class="col-md-6 col-lg-5">
+            <?php echo csrf_field(); ?>
             <div class="mb-3">
                 <label class="form-label">Current Password</label>
                 <input type="password" class="form-control" name="current_password" required>

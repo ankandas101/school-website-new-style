@@ -61,7 +61,7 @@ class Notice {
         if ($forTicker) {
             $sql .= ' AND show_in_ticker=1';
         }
-        $sql .= ' ORDER BY notice_date DESC, id DESC LIMIT ?';
+        $sql .= ' ORDER BY notice_date IS NULL, notice_date DESC, id DESC LIMIT ?';
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param('i', $limit);
         $stmt->execute();

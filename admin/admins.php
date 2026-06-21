@@ -1,54 +1,63 @@
 <?php
 session_start();
 require_once '../includes/db.php';
+require_once '../includes/csrf.php';
 define('ADMIN_SESSION', 'admin_logged_in');
 require_once __DIR__ . '/session_guard.php';
 
 $msg = '';
 // Handle add admin
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_admin'])) {
-    $username = trim($_POST['username'] ?? '');
-    $password = trim($_POST['password'] ?? '');
-    $name = trim($_POST['name'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    if ($username && $password && $name && $email) {
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $is_superadmin = 0; // Always 0 from this page
-        $stmt = $conn->prepare('INSERT INTO admins (username, password, name, email, is_superadmin) VALUES (?, ?, ?, ?, ?)');
-        $stmt->bind_param('ssssi', $username, $hashed_password, $name, $email, $is_superadmin);
-        if ($stmt->execute()) {
-            $msg = '<div class="alert alert-success">Admin user added successfully!</div>';
-        } else {
-            $msg = '<div class="alert alert-danger">Failed to add admin: ' . htmlspecialchars($stmt->error) . '</div>';
-        }
-        $stmt->close();
+    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+        $msg = '<div class="alert alert-danger">Invalid security token. Please try again.</div>';
     } else {
-        $msg = '<div class="alert alert-danger">All fields are required.</div>';
+        $username = trim($_POST['username'] ?? '');
+        $password = trim($_POST['password'] ?? '');
+        $name = trim($_POST['name'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        if ($username && $password && $name && $email) {
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $is_superadmin = 0; // Always 0 from this page
+            $stmt = $conn->prepare('INSERT INTO admins (username, password, name, email, is_superadmin) VALUES (?, ?, ?, ?, ?)');
+            $stmt->bind_param('ssssi', $username, $hashed_password, $name, $email, $is_superadmin);
+            if ($stmt->execute()) {
+                $msg = '<div class="alert alert-success">Admin user added successfully!</div>';
+            } else {
+                $msg = '<div class="alert alert-danger">Failed to add admin: ' . htmlspecialchars($stmt->error) . '</div>';
+            }
+            $stmt->close();
+        } else {
+            $msg = '<div class="alert alert-danger">All fields are required.</div>';
+        }
     }
 }
 // Handle delete admin
-if (isset($_GET['delete'])) {
-    $id = intval($_GET['delete']);
-    // Prevent deleting your own account and superadmins
-    $stmt = $conn->prepare('SELECT is_superadmin FROM admins WHERE id = ?');
-    $stmt->bind_param('i', $id);
-    $stmt->execute();
-    $stmt->bind_result($is_superadmin);
-    $stmt->fetch();
-    $stmt->close();
-    if ($id == $_SESSION[ADMIN_SESSION]) {
-        $msg = '<div class="alert alert-danger">You cannot delete your own account.</div>';
-    } else if ($is_superadmin == 1) {
-        $msg = '<div class="alert alert-danger">You cannot delete a superadmin.</div>';
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_admin'])) {
+    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+        $msg = '<div class="alert alert-danger">Invalid security token. Please try again.</div>';
     } else {
-        $stmt = $conn->prepare('DELETE FROM admins WHERE id = ?');
+        $id = intval($_POST['delete_id'] ?? 0);
+        // Prevent deleting your own account and superadmins
+        $stmt = $conn->prepare('SELECT is_superadmin FROM admins WHERE id = ?');
         $stmt->bind_param('i', $id);
-        if ($stmt->execute()) {
-            $msg = '<div class="alert alert-success">Admin user deleted successfully!</div>';
-        } else {
-            $msg = '<div class="alert alert-danger">Failed to delete admin: ' . htmlspecialchars($stmt->error) . '</div>';
-        }
+        $stmt->execute();
+        $stmt->bind_result($is_superadmin);
+        $stmt->fetch();
         $stmt->close();
+        if ($id == $_SESSION[ADMIN_SESSION]) {
+            $msg = '<div class="alert alert-danger">You cannot delete your own account.</div>';
+        } else if ($is_superadmin == 1) {
+            $msg = '<div class="alert alert-danger">You cannot delete a superadmin.</div>';
+        } else {
+            $stmt = $conn->prepare('DELETE FROM admins WHERE id = ?');
+            $stmt->bind_param('i', $id);
+            if ($stmt->execute()) {
+                $msg = '<div class="alert alert-success">Admin user deleted successfully!</div>';
+            } else {
+                $msg = '<div class="alert alert-danger">Failed to delete admin: ' . htmlspecialchars($stmt->error) . '</div>';
+            }
+            $stmt->close();
+        }
     }
 }
 // Fetch all admins except superadmins
@@ -81,6 +90,7 @@ $admins = $conn->query('SELECT * FROM admins WHERE is_superadmin = 0 ORDER BY id
             <div class="card-header">Add New Admin</div>
             <div class="card-body">
                 <form method="post">
+                    <?php echo csrf_field(); ?>
                     <div class="mb-3">
                         <label for="username" class="form-label">Username</label>
                         <input type="text" class="form-control" id="username" name="username" required>
@@ -123,7 +133,12 @@ $admins = $conn->query('SELECT * FROM admins WHERE is_superadmin = 0 ORDER BY id
                             <td><?php echo htmlspecialchars($row['email']); ?></td>
                             <td>
                                 <?php if ($row['id'] != $_SESSION[ADMIN_SESSION]): ?>
-                                <a href="?delete=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this admin?');">Delete</a>
+                                <form method="post" class="d-inline">
+                                    <?php echo csrf_field(); ?>
+                                    <input type="hidden" name="delete_admin" value="1">
+                                    <input type="hidden" name="delete_id" value="<?php echo intval($row['id']); ?>">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this admin?');">Delete</button>
+                                </form>
                                 <?php else: ?>
                                 <span class="text-muted">(You)</span>
                                 <?php endif; ?>

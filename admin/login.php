@@ -3,13 +3,15 @@
 session_set_cookie_params([
     'lifetime' => 0,
     'path' => '/',
-    'domain' => '', // Set to your domain if needed
+    'domain' => '',
     'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on',
     'httponly' => true,
     'samesite' => 'Strict'
 ]);
 session_start();
 require_once '../includes/db.php';
+require_once '../includes/csrf.php';
+require_once '../includes/security.php';
 
 // Admin Auth class
 define('ADMIN_SESSION', 'admin_logged_in');
@@ -42,36 +44,34 @@ class AdminAuth {
 
 $auth = new AdminAuth($conn);
 
-// Cloudflare Turnstile configuration - Get keys from database
-$turnstile_site_key = '';
-$turnstile_secret_key = '';
-$turnstile_status = '0'; // Default to inactive
-
-// Get Cloudflare Turnstile keys and status from site_settings table
-$stmt = $conn->prepare("SELECT setting_name, setting_value FROM site_settings WHERE setting_name IN ('turnstile_site_key', 'turnstile_secret_key', 'CloudflareTurnstile_Status')");
-$stmt->execute();
-$result = $stmt->get_result();
-while ($row = $result->fetch_assoc()) {
-    if ($row['setting_name'] === 'turnstile_site_key') {
-        $turnstile_site_key = $row['setting_value'];
-    } else if ($row['setting_name'] === 'turnstile_secret_key') {
-        $turnstile_secret_key = $row['setting_value'];
-    } else if ($row['setting_name'] === 'CloudflareTurnstile_Status') {
-        $turnstile_status = $row['setting_value'];
-    }
-}
+// Cloudflare Turnstile configuration from environment variables
+$turnstile_site_key = env('TURNSTILE_SITE_KEY', '');
+$turnstile_secret_key = env('TURNSTILE_SECRET_KEY', '');
+$turnstile_status = env('TURNSTILE_STATUS', '0');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verify_csrf_token($_POST['csrf_token'] ?? '')) {
+        $_SESSION['login_error'] = 'Invalid security token. Please try again.';
+        header('Location: login.php');
+        exit;
+    }
+
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
-    $captcha_verified = true; // Default to true if captcha is disabled
+    $rate_limit_key = 'login:' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+
+    if (is_rate_limited($rate_limit_key, 5, 300)) {
+        $_SESSION['login_error'] = 'Too many login attempts. Please try again in 5 minutes.';
+        header('Location: login.php');
+        exit;
+    }
+
+    $captcha_verified = true;
     
-    // Only verify Cloudflare Turnstile if it's active
     if ($turnstile_status === '1') {
         $turnstile_response = $_POST['cf-turnstile-response'] ?? '';
-        $captcha_verified = false; // Set to false until verified
+        $captcha_verified = false;
         
-        // Make POST request to Cloudflare Turnstile verification endpoint
         $url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
         $data = [
             'secret' => $turnstile_secret_key,
@@ -92,16 +92,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $response_data = json_decode($result, true);
         
         $captcha_verified = isset($response_data['success']) && $response_data['success'] === true;
-        
-        if (!$captcha_verified) {
-            $_SESSION['login_error'] = 'Captcha verification failed. Please try again.';
-            header('Location: login.php');
-            exit;
-        }
     }
     
+    if (!$captcha_verified) {
+        $_SESSION['login_error'] = 'Captcha verification failed. Please try again.';
+        header('Location: login.php');
+        exit;
+    }
+
     if ($auth->login($username, $password)) {
-        session_regenerate_id(true); // Prevent session fixation
+        reset_rate_limit($rate_limit_key);
+        session_regenerate_id(true);
         header('Location: dashboard.php');
         exit;
     } else {
@@ -128,7 +129,7 @@ if (isset($_GET['timeout']) && $_GET['timeout'] == '1') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - School CMS</title>
+    <title>Admin Login - School Website Content Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Cloudflare Turnstile Script -->
     <?php if ($turnstile_status === '1'): ?>
@@ -155,6 +156,7 @@ if (isset($_GET['timeout']) && $_GET['timeout'] == '1') {
                 <div class="alert alert-danger py-2"><?php echo htmlspecialchars($error); ?></div>
             <?php endif; ?>
             <form method="post" autocomplete="off">
+                <?php echo csrf_field(); ?>
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
                     <input type="text" class="form-control" id="username" name="username" required autofocus>
@@ -176,7 +178,7 @@ if (isset($_GET['timeout']) && $_GET['timeout'] == '1') {
         </div>
         <a href="/" class="btn btn-secondary">Go to Homepage</a>
         <div class="text-center mt-2 small" style="max-width: 400px; color: #fff;">
-            কারিগরি সহায়তায়: <a href="https://facebook.com/ankandas.fb" target="_blank" style="color: #fff; text-decoration: underline;">Khulna Devs</a><br>
+            কারিগরি সহায়তায়: <a href="https://ankandas.me" target="_blank" style="color: #fff; text-decoration: underline;">Khulna Devs</a><br>
             লগইন করতে সমস্যা হলে আমাদের সাথে যোগাযোগ করুন: 
             <a href="mailto:support@khulnadevs.com" style="color: #fff; text-decoration: underline;">support@khulnadevs.com</a> |
             <a href="https://wa.me/8801745009934" target="_blank" style="color: #fff; text-decoration: underline;">WhatsApp এ মেসেজ করুন</a>

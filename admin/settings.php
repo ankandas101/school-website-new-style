@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../includes/db.php';
+require_once '../includes/csrf.php';
 define('ADMIN_SESSION', 'admin_logged_in');
 
 // Auth check
@@ -225,6 +226,9 @@ $meta_code = '';
 $stat_edit = null;
 $statistics_list = $statistics->getAll();
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !verify_csrf_token($_POST['csrf_token'] ?? '')) {
+    $error = 'Invalid security token. Please try again.';
+} else {
 // Handle school info update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_school'])) {
     $school_name = trim($_POST['school_name'] ?? '');
@@ -402,6 +406,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_meta_code'])) 
     $success = 'Meta code updated successfully!';
     $meta_code = $new_meta_code;
 }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -574,6 +579,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_meta_code'])) 
                                 <div class="card-header bg-info text-white">School Info</div>
                                 <div class="card-body">
                                     <form method="post" enctype="multipart/form-data">
+                                        <?php echo csrf_field(); ?>
                                         <div class="mb-3">
                                             <label class="form-label">Institute Name</label>
                                             <input type="text" class="form-control" name="school_name" value="<?php echo htmlspecialchars($school_info['school_name'] ?? ''); ?>">
@@ -636,6 +642,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_meta_code'])) 
                                 <div class="card-header bg-success text-white">Footer & Contact Info</div>
                                 <div class="card-body">
                                     <form method="post" enctype="multipart/form-data">
+                                        <?php echo csrf_field(); ?>
                                         <div class="mb-3">
                                             <label class="form-label">Address</label>
                                             <input type="text" class="form-control" name="address" value="<?php echo htmlspecialchars($footer_info['address'] ?? ''); ?>">
@@ -686,6 +693,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_meta_code'])) 
                                 <div class="card-header bg-dark text-white">School Statistics</div>
                                 <div class="card-body">
                                     <form method="post" class="mb-4">
+                                        <?php echo csrf_field(); ?>
                                         <input type="hidden" name="stat_id" value="<?php echo intval($stat_edit['id'] ?? 0); ?>">
                                         <div class="row g-3">
                                             <div class="col-md-4">
@@ -758,6 +766,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_meta_code'])) 
                                 <div class="card-body">
                                     <?php foreach ($seo_pages as $page => $label): $seo_data = $seo->get($page); ?>
                                     <form method="post" class="mb-4">
+                                        <?php echo csrf_field(); ?>
                                         <input type="hidden" name="seo_page" value="<?php echo $page; ?>">
                                         <h6><?php echo $label; ?> Page</h6>
                                         <div class="mb-2">
@@ -786,6 +795,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_meta_code'])) 
                           <div class="card-header bg-secondary text-white">Meta Code (for &lt;head&gt;)</div>
                           <div class="card-body">
                             <form method="post">
+                              <?php echo csrf_field(); ?>
                               <div class="mb-3">
                                 <label class="form-label">Meta Code (HTML, will be added before &lt;/head&gt;)</label>
                                 <textarea class="form-control" name="meta_code" rows="5"><?php echo htmlspecialchars($meta_code); ?></textarea>
@@ -805,6 +815,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_meta_code'])) 
                                 <div class="card-header bg-info text-white">Location Map</div>
                                 <div class="card-body text-center">
                                     <form method="post">
+                                        <?php echo csrf_field(); ?>
                                         <div class="mb-3">
                                             <label class="form-label">Google Map Embed Code</label>
                                             <textarea class="form-control" name="google_map" rows="4"><?php echo htmlspecialchars($school_info['google_map'] ?? ''); ?></textarea>
@@ -824,6 +835,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_meta_code'])) 
                                 <div class="card-header bg-primary text-white">Cloudflare Turnstile Settings</div>
                                 <div class="card-body">
                                     <form method="post">
+                                        <?php echo csrf_field(); ?>
                                         <input type="hidden" name="update_turnstile_settings" value="1">
                                         <div class="mb-3">
                                             <label for="turnstile_site_key" class="form-label">Site Key</label>

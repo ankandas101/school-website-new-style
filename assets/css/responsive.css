@@ -262,6 +262,13 @@
     gap: 0.75rem !important;
   }
 
+  .hero-stats-wrapper > section > div[style*="grid-template-columns:repeat(4,1fr)"],
+  .hero-stats-wrapper > section > div[style*="grid-template-columns: repeat(4,1fr)"] {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 0.2rem !important;
+    padding: 0.65rem 0.2rem !important;
+  }
+
   .hero-wrapper {
     width: 100% !important;
     max-width: 100% !important;
@@ -404,6 +411,37 @@
     max-width: 100% !important;
   }
 
+  .hero-stats-wrapper > section > div {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 0.2rem !important;
+    padding: 0.65rem 0.2rem !important;
+  }
+
+  .hero-stats-wrapper .stat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.15rem;
+    padding: 0;
+  }
+
+  .hero-stats-wrapper .stat-icon,
+  .hero-stats-wrapper .stat-item .stat-icon {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .hero-stats-wrapper .stat-number {
+    font-size: 0.72rem !important;
+  }
+
+  .hero-stats-wrapper .stat-label {
+    font-size: 0.56rem !important;
+    line-height: 1.1 !important;
+  }
+
   .about-principal-grid,
   .principal-message-grid,
   .management-grid {
@@ -535,9 +573,18 @@
     overflow-wrap: anywhere;
   }
 
+  main > div[style*="display:flex; gap:1.5rem; align-items:flex-start;"] {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
   main > aside,
   aside[style*="width:300px"] {
-    display: none !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 1 100% !important;
+    margin-top: 1rem !important;
   }
 
   .site-footer {
@@ -609,7 +656,7 @@
   .hero-buttons {
     gap: var(--spacing-xs);
     flex-direction: column;
-    width: 100%;
+    width: 70%;
   }
   .btn-hero-primary,
   .btn-hero-outline {
@@ -634,26 +681,39 @@
     gap: var(--spacing-xs);
   }
 
-  .stat-card {
-    padding: var(--spacing-sm) 0;
-    gap: var(--spacing-sm) var(--spacing-md);
-    grid-template-columns: 48px 1fr;
+  .hero-stats-wrapper {
+    padding: 0 var(--spacing-xs) !important;
   }
-  .stat-number {
-    font-size: 1.5rem;
-  }
-  .stat-label {
-    font-size: 0.8125rem;
-  }
-  .stat-icon,
-  .stat-item .stat-icon {
-    width: 48px;
-    height: 48px;
-  }
+
   .hero-stats-wrapper > section > div {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: var(--spacing-md) !important;
-    padding: var(--spacing-sm) !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 0.18rem !important;
+    padding: 0.45rem 0.1rem !important;
+  }
+
+  .hero-stats-wrapper .stat-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.12rem;
+    padding: 0;
+  }
+
+  .hero-stats-wrapper .stat-number {
+    font-size: 0.68rem !important;
+  }
+
+  .hero-stats-wrapper .stat-label {
+    font-size: 0.5rem !important;
+    line-height: 1.05 !important;
+  }
+
+  .hero-stats-wrapper .stat-icon,
+  .hero-stats-wrapper .stat-item .stat-icon {
+    width: 24px !important;
+    height: 24px !important;
   }
 
   .hero-container .swiper-button-prev,

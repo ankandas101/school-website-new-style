@@ -62,7 +62,7 @@ $statistics = $schoolStats->getActive();
             <?php endif; ?>
             <?php if (!empty($school_info['school_code'])): ?>
               <span class="px-4 py-2 bg-orange-600/20 border border-orange-500/30 rounded-full text-orange-300 text-sm font-semibold">
-                School Code: <?php echo htmlspecialchars($school_info['school_code']); ?>
+                Institute Code: <?php echo htmlspecialchars($school_info['school_code']); ?>
               </span>
             <?php endif; ?>
           </div>
@@ -116,8 +116,8 @@ $statistics = $schoolStats->getActive();
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
             </svg>
           </div>
-          <div class="text-2xl font-bold text-gray-900 mb-1">২৫০০+</div>
-          <div class="text-gray-500 text-xs font-medium">সক্রিয় শিক্ষার্থী</div>
+          <div class="text-2xl font-bold text-gray-900 mb-1">৫০০+</div>
+          <div class="text-gray-500 text-xs font-medium">শিক্ষার্থী</div>
         </div>
         <div class="bg-white rounded-[24px] shadow-xl border border-gray-100 p-4 text-center hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
           <div class="w-10 h-10 bg-blue-50 rounded-2xl flex items-center justify-center mb-3 mx-auto">
@@ -125,8 +125,8 @@ $statistics = $schoolStats->getActive();
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
             </svg>
           </div>
-          <div class="text-2xl font-bold text-gray-900 mb-1">৬০+</div>
-          <div class="text-gray-500 text-xs font-medium">স্কিল্ড শিক্ষক</div>
+          <div class="text-2xl font-bold text-gray-900 mb-1">১০+</div>
+          <div class="text-gray-500 text-xs font-medium">শিক্ষক</div>
         </div>
         <div class="bg-white rounded-[24px] shadow-xl border border-gray-100 p-4 text-center hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
           <div class="w-10 h-10 bg-purple-50 rounded-2xl flex items-center justify-center mb-3 mx-auto">
@@ -134,8 +134,8 @@ $statistics = $schoolStats->getActive();
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
             </svg>
           </div>
-          <div class="text-2xl font-bold text-gray-900 mb-1">৯৮%</div>
-          <div class="text-gray-500 text-xs font-medium">ফলাফল হার</div>
+          <div class="text-2xl font-bold text-gray-900 mb-1">১০০%</div>
+          <div class="text-gray-500 text-xs font-medium">পাশের হার</div>
         </div>
         <div class="bg-white rounded-[24px] shadow-xl border border-gray-100 p-4 text-center hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
           <div class="w-10 h-10 bg-orange-50 rounded-2xl flex items-center justify-center mb-3 mx-auto">
@@ -247,14 +247,13 @@ $statistics = $schoolStats->getActive();
   </section>
 
   <!-- ===== PRINCIPAL'S MESSAGE ===== -->
-  <section class="py-20 bg-white">
+  <section class="bg-white">
     <div class="max-w-6xl mx-auto px-4">
       <div class="bg-gradient-to-br from-green-50 to-blue-50 rounded-[32px] p-8 md:p-12">
         <div class="grid md:grid-cols-2 gap-12 items-center">
           <div class="order-2 md:order-1" data-aos="fade-right">
-            <span class="inline-block px-4 py-1.5 bg-green-600 text-white rounded-full text-sm font-semibold mb-4">প্রধান শিক্ষকের বাণী</span>
             <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              প্রধান শিক্ষকের বাণী
+             প্রতিষ্ঠান প্রধানের বাণী
             </h2>
             <div class="space-y-4 text-gray-600 leading-relaxed mb-8">
               <p>

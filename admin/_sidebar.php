@@ -1,6 +1,7 @@
 <?php
 // _sidebar.php
 $currentPage = basename($_SERVER['PHP_SELF']);
+$showSoftwareLogin = strtolower((string)env('SYSTEM_SOFTWARE', 'false')) === 'true';
 ?>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -161,6 +162,8 @@ $currentPage = basename($_SERVER['PHP_SELF']);
   }
 
   body > .container-fluid > .row.gx-0 > main {
+    width: 100% !important;
+    max-width: 100% !important;
     min-width: 0;
     overflow-y: auto;
     overflow-x: hidden;
@@ -220,13 +223,15 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
     <ul class="nav flex-column nav-pills gap-1">
       <li class="nav-item"><a class="nav-link <?= $currentPage === 'dashboard.php' ? 'active' : '' ?>" href="dashboard.php"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
-      <li class="nav-item"><a class="nav-link <?= $currentPage === '#' ? 'active' : '' ?>" href="<?php echo APP_URL; ?>/dashboard"><i class="bi bi-speedometer"></i> Software Login</a></li>
+      <?php if ($showSoftwareLogin): ?>
+      <li class="nav-item"><a class="nav-link <?= $currentPage === '#' ? 'active' : '' ?>" href="<?php echo APP_URL; ?>/authentication"><i class="bi bi-speedometer"></i> Software Login</a></li>
+      <?php endif; ?>
       <li class="nav-item"><a class="nav-link <?= $currentPage === 'notices.php' ? 'active' : '' ?>" href="notices.php"><i class="bi bi-megaphone"></i> Notices</a></li>
       <li class="nav-item"><a class="nav-link <?= $currentPage === 'slider.php' ? 'active' : '' ?>" href="slider.php"><i class="bi bi-sliders"></i> Slider</a></li>
       <li class="nav-item"><a class="nav-link <?= $currentPage === 'teachers.php' ? 'active' : '' ?>" href="teachers.php"><i class="bi bi-person-badge"></i> Teachers</a></li>
       <li class="nav-item"><a class="nav-link <?= $currentPage === 'management_committee_admin.php' ? 'active' : '' ?>" href="management_committee_admin.php"><i class="bi bi-people-fill"></i> Committee Info</a></li>
       <li class="nav-item"><a class="nav-link <?= $currentPage === 'student_info.php' ? 'active' : '' ?>" href="student_info.php"><i class="bi bi-people"></i> Student Info</a></li>
-      <li class="nav-item"><a class="nav-link <?= $currentPage === 'student_of_the_year.php' ? 'active' : '' ?>" href="student_of_the_year.php"><i class="bi bi-award"></i> কৃতি শিক্ষার্থী</a></li>
+      <li class="nav-item"><a class="nav-link <?= $currentPage === 'student_of_the_year.php' ? 'active' : '' ?>" href="student_of_the_year.php"><i class="bi bi-award"></i> Students of Year</a></li>
       <li class="nav-item"><a class="nav-link <?= $currentPage === 'routines.php' ? 'active' : '' ?>" href="routines.php"><i class="bi bi-calendar2-week"></i> Routine</a></li>
       <li class="nav-item"><a class="nav-link <?= $currentPage === 'results.php' ? 'active' : '' ?>" href="results.php"><i class="bi bi-file-earmark-bar-graph"></i> Results</a></li>
       <li class="nav-item"><a class="nav-link <?= $currentPage === 'result_archives.php' ? 'active' : '' ?>" href="result_archives.php"><i class="bi bi-archive"></i> Result Archives</a></li>
@@ -236,6 +241,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
       <li class="nav-item"><a class="nav-link <?= $currentPage === 'contact_messages.php' ? 'active' : '' ?>" href="contact_messages.php"><i class="bi bi-envelope"></i> Contact Messages</a></li>
       <li class="nav-item"><a class="nav-link <?= $currentPage === 'admission_info.php' ? 'active' : '' ?>" href="admission_info.php"><i class="bi bi-file-earmark-text"></i> Admission Info</a></li>
       <li class="nav-item"><a class="nav-link <?= $currentPage === 'settings.php' ? 'active' : '' ?>" href="settings.php"><i class="bi bi-gear"></i> Settings</a></li>
+      <li class="nav-item"><a class="nav-link <?= $currentPage === '#' ? 'active' : '' ?>" href="https://www.youtube.com/watch?v=I5FAWMry5pE"><i class="bi bi-youtube"></i> How to Use</a></li>
       <li class="nav-item mt-3"><a class="nav-link <?= $currentPage === 'logout.php' ? 'active' : '' ?> text-danger" href="logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
     </ul>
   </div>

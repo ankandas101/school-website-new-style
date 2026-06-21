@@ -41,7 +41,7 @@ $footer_info = $footer->get();
 
                 <!-- Col 2: Quick Links -->
                 <div>
-                    <div class="footer-heading">দ্রুত লিংক</div>
+                    <div class="footer-heading">গুরুত্বপূর্ণ লিংক</div>
                     <nav aria-label="Quick Links">
                         <a href="index.php" class="footer-link">
                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>

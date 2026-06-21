@@ -110,7 +110,11 @@ $school_info = $schoolInfoObj->get();
         .dashboard-panel {
             padding: 1.5rem;
         }
-
+        .main_panel {
+            width: 100% !important;
+            max-width: 100%;
+            flex: 0 0 100%;
+        }
         .dashboard-header {
             display: flex;
             justify-content: space-between;
@@ -177,7 +181,7 @@ $school_info = $schoolInfoObj->get();
     <div class="row gx-0">
         <?php include '_sidebar.php'; ?>
 
-        <main class="col-12 col-md-9 col-lg-10 px-0">
+        <main class="main_panel col-12 col-md-9 col-lg-10 px-0">
             <div class="dashboard-panel">
                 <div class="dashboard-header">
                     <div>

@@ -30,6 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $phone = $conn->real_escape_string($_POST['phone'] ?? '');
   $message = $conn->real_escape_string($_POST['message'] ?? '');
   $captcha_verified = true; // Default to true if captcha is disabled
+  $phone_valid = preg_match('/^(013|014|015|016|017|018|019)\d{7}$/', $phone) === 1;
   
   // Only verify Cloudflare Turnstile if it's active
   if ($turnstile_status === '1') {
@@ -63,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
   }
   
-  if ($name && $email && $phone && $message && $captcha_verified) {
+  if ($name && $email && $phone && $message && $captcha_verified && $phone_valid) {
     $sql = "INSERT INTO contact_messages (name, email, phone, message) VALUES ('$name', '$email', '$phone', '$message')";
     if ($conn->query($sql) === TRUE) {
       $success = "আপনার বার্তা সফলভাবে পাঠানো হয়েছে। ধন্যবাদ!";
@@ -72,6 +73,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
   } else if (!$captcha_verified) {
     // Captcha error already set
+  } else if (!$phone_valid) {
+    $error = "ফোন নম্বর অবশ্যই ১১ ডিজিটের হতে হবে এবং 017, 013, 014, 015, 016, 018, 019 দিয়ে শুরু হতে হবে।";
   } else {
     $error = "সমস্ত ক্ষেত্র পূরণ করুন।";
   }
@@ -267,7 +270,7 @@ include 'includes/header.php';
 .map-container {
   border-radius: 12px;
   overflow: hidden;
-  height: 400px;
+  height: 200px;
 }
 
 /* Responsive */
@@ -328,12 +331,12 @@ include 'includes/header.php';
         
         <div class="form-group">
           <label>ইমেইল</label>
-          <input type="email" name="email" required>
+          <input type="email" name="email">
         </div>
         
         <div class="form-group">
           <label>ফোন নম্বর</label>
-          <input type="tel" name="phone" required>
+          <input type="tel" name="phone" placeholder="01xxxxxxxx" required>
         </div>
         
         <div class="form-group">

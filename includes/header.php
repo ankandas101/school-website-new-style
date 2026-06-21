@@ -22,7 +22,7 @@ if (class_exists('SEOSettings')) {
     $seo = new SEOSettings($conn);
     $seo_data = $seo->get($page);
 }
-$default_desc = 'বাংলাদেশের অন্যতম শ্রেষ্ঠ স্কুল ম্যানেজমেন্ট সিস্টেম - সহজ ও দ্রুত ওয়েবসাইট আপনার শিক্ষাপ্রতিষ্ঠানের জন্য।';
+$default_desc = 'বাংলাদেশের অন্যতম শ্রেষ্ঠ স্কুল ম্যানেজমেন্ট ওয়েবসাইট সিস্টেম - সহজ ও দ্রুত ওয়েবসাইট আপনার শিক্ষাপ্রতিষ্ঠানের জন্য।';
 if ($seo_data && !empty($seo_data['meta_description'])) {
     $description = $seo_data['meta_description'];
 } elseif (!empty($school_info['about'])) {
@@ -30,7 +30,7 @@ if ($seo_data && !empty($seo_data['meta_description'])) {
 } else {
     $description = $default_desc;
 }
-$default_keywords = 'স্কুল ওয়েবসাইট, স্কুল ম্যানেজমেন্ট, শিক্ষাপ্রতিষ্ঠান, school website, education website, বাংলাদেশ';
+$default_keywords = 'ankandas.me,স্কুল ওয়েবসাইট, স্কুল ম্যানেজমেন্ট, শিক্ষাপ্রতিষ্ঠান, school website, education website,ankan das, বাংলাদেশ';
 $keywords = ($seo_data && !empty($seo_data['meta_keywords'])) ? $seo_data['meta_keywords'] : $default_keywords;
 ?>
 <!DOCTYPE html>
