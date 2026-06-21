@@ -85,42 +85,22 @@ $students = $student->getAll();
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
   <style>
-    html, body {
-      height: 100%;
-      margin: 0;
+    body {
+      background: #f5f7fb;
+      overflow-x: hidden;
     }
-    .full-height-row {
-      min-height: 100vh;
+    .page-shell {
+      min-width: 0;
     }
-    /* Sidebar must be sticky and full height */
-    .sidebar {
-      height: 100vh;
-      overflow-y: auto;
-      position: sticky;
-      top: 0;
-      z-index: 1020;
-    }
-    /* Remove extra padding top when sidebar is shown in collapse */
-    #sidebarMenu.collapse.show {
-      padding-top: 0 !important;
-    }
-    /* Navbar toggler spacing fix */
-    .navbar-toggler {
-      margin-top: 0 !important;
-      margin-bottom: 0 !important;
-    }
-    /* Small padding top on mobile for main content */
-    @media (max-width: 767.98px) {
-      main {
-        padding-top: 1rem !important;
-      }
+    .page-panel {
+      padding: 1.25rem;
     }
   </style>
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <div class="container">
+  <div class="container-fluid px-3 px-lg-4">
     <a class="navbar-brand" href="dashboard.php">Admin Dashboard</a>
     <div class="ms-auto">
       <a href="logout.php" class="btn btn-outline-light btn-sm">Logout</a>
@@ -128,13 +108,11 @@ $students = $student->getAll();
   </div>
 </nav>
 
-<div class="container-fluid px-0">
-  <div class="row gx-0 full-height-row">
-    <aside class="col-md-3 col-lg-2 p-0 sidebar">
-      <?php include '_sidebar.php'; ?>
-    </aside>
+<div class="container-fluid">
+  <div class="row gx-0 page-shell">
+    <?php include '_sidebar.php'; ?>
 
-    <main class="col-md-9 col-lg-10 px-3 py-4">
+    <main class="col-12 col-md-9 col-lg-10 page-panel">
       <h3 class="mb-4">Student of the Year Management</h3>
       <a href="dashboard.php" class="btn btn-secondary mb-3">&larr; Back to Dashboard</a>
 

@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^php -l \"c:\\\\xampp\\\\htdocs\\\\school website\\\\admin\\\\_sidebar\\.php\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

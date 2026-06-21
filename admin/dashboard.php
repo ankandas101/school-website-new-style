@@ -97,10 +97,74 @@ $school_info = $schoolInfoObj->get();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        body {
+            background: #f5f7fb;
+        }
+
+        .admin-top-nav {
+            background: linear-gradient(90deg, #0f172a 0%, #1e3a8a 100%) !important;
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+        }
+
+        .dashboard-panel {
+            padding: 1.5rem;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.25rem;
+            padding: 1rem 1.1rem;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+        }
+
+        .dashboard-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #0f172a;
+        }
+
+        .dashboard-header .text-muted {
+            font-size: 0.9rem;
+        }
+
+        .dashboard-card {
+            border: 0;
+            border-radius: 16px;
+            background: #fff;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 30px rgba(15, 23, 42, 0.1);
+        }
+
+        .dashboard-card .card-body {
+            padding: 1rem;
+        }
+
+        .dashboard-card .card-title {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-card .display-6 {
+            font-size: 2rem;
+        }
+    </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container">
+<nav class="navbar navbar-expand-lg navbar-dark admin-top-nav">
+    <div class="container-fluid px-3 px-lg-4">
         <a class="navbar-brand" href="#">Admin Dashboard</a>
         <a href="../index.php" class="btn btn-outline-light btn-sm me-2" target="_blank">View Website</a>
         <div class="ms-auto">
@@ -109,28 +173,26 @@ $school_info = $schoolInfoObj->get();
     </div>
 </nav>
 
-<div class="container-fluid" style="margin-top: 0;">
+<div class="container-fluid">
     <div class="row gx-0">
-        <div class="col-md-3 col-lg-2 p-0">
-            <?php include '_sidebar.php'; ?>
-        </div>
+        <?php include '_sidebar.php'; ?>
 
-        <main class="col-md-9 col-lg-10 px-md-4 d-flex flex-column" style="min-height: 100vh;">
-            <div class="row mb-3">
-                <div class="col-12">
-                    <div class="d-flex justify-content-between align-items-center flex-wrap mb-2" style="font-size:1.1rem;">
-                        <div>
+        <main class="col-12 col-md-9 col-lg-10 px-0">
+            <div class="dashboard-panel">
+                <div class="dashboard-header">
+                    <div>
+                        <h3>Dashboard Overview</h3>
+                        <div class="text-muted">
                             <strong>School Name:</strong> <?= htmlspecialchars($school_info['school_name'] ?? '') ?> &nbsp;|
                             <strong>EIIN:</strong> <?= htmlspecialchars($school_info['eiin'] ?? '') ?>
-                            <strong>Date/Time:</strong> <span id="datetime"></span>
                         </div>
                     </div>
+                    <div class="text-muted">Date/Time: <span id="datetime"></span></div>
                 </div>
-            </div>
 
-            <div class="row mb-4 g-4">
+                <div class="row mb-4 g-4">
                 <div class="col-md-3 col-12">
-                    <div class="card text-center shadow-sm">
+                    <div class="card dashboard-card text-center">
                         <div class="card-body">
                             <h5 class="card-title">Students</h5>
                             <p class="display-6 fw-bold text-info">
@@ -143,7 +205,7 @@ $school_info = $schoolInfoObj->get();
                 </div>
 
                 <div class="col-md-3 col-12">
-                    <div class="card text-center shadow-sm">
+                    <div class="card dashboard-card text-center">
                         <div class="card-body">
                             <h5 class="card-title">Teachers</h5>
                             <p class="display-6 fw-bold text-success"><?= $teachers ?></p>
@@ -153,7 +215,7 @@ $school_info = $schoolInfoObj->get();
                 </div>
 
                 <div class="col-md-3 col-12">
-                    <div class="card text-center shadow-sm">
+                    <div class="card dashboard-card text-center">
                         <div class="card-body">
                             <h5 class="card-title">Slider</h5>
                             <p class="display-6 fw-bold text-info"><?= $active_sliders ?></p>
@@ -163,7 +225,7 @@ $school_info = $schoolInfoObj->get();
                 </div>
 
                 <div class="col-md-3 col-12">
-                    <div class="card text-center shadow-sm">
+                    <div class="card dashboard-card text-center">
                         <div class="card-body">
                             <h5 class="card-title">Photo Gallery</h5>
                             <p class="display-6 fw-bold text-secondary"><?= $active_photos ?></p>
@@ -173,7 +235,7 @@ $school_info = $schoolInfoObj->get();
                 </div>
 
                 <div class="col-md-3 col-12">
-                    <div class="card text-center shadow-sm">
+                    <div class="card dashboard-card text-center">
                         <div class="card-body">
                             <h5 class="card-title">Video Gallery</h5>
                             <p class="display-6 fw-bold text-dark"><?= $active_videos ?></p>
@@ -183,7 +245,7 @@ $school_info = $schoolInfoObj->get();
                 </div>
 
                 <div class="col-md-3 col-12">
-                    <div class="card text-center shadow-sm">
+                    <div class="card dashboard-card text-center">
                         <div class="card-body">
                             <h5 class="card-title">Important Links</h5>
                             <p class="display-6 fw-bold text-danger"><?= $important_links ?></p>
@@ -193,7 +255,7 @@ $school_info = $schoolInfoObj->get();
                 </div>
 
                 <div class="col-md-3 col-12">
-                    <div class="card text-center shadow-sm">
+                    <div class="card dashboard-card text-center">
                         <div class="card-body">
                             <h5 class="card-title">Events/Blog</h5>
                             <p class="display-6 fw-bold text-primary"><?= $events_count ?></p>
@@ -203,7 +265,7 @@ $school_info = $schoolInfoObj->get();
                 </div>
 <!-- 
                 <div class="col-md-3 col-12">
-                    <div class="card text-center shadow-sm">
+                    <div class="card dashboard-card text-center">
                         <div class="card-body">
                             <h5 class="card-title">Contact Messages</h5>
                             <p class="display-6 fw-bold text-primary"><?= $contact_messages ?></p>
@@ -213,7 +275,7 @@ $school_info = $schoolInfoObj->get();
                 </div>
 -->
                 <div class="col-md-3 col-12">
-                    <div class="card text-center shadow-sm">
+                    <div class="card dashboard-card text-center">
                         <div class="card-body">
                             <h5 class="card-title">কৃতি শিক্ষার্থী</h5>
                             <p class="display-6 fw-bold text-warning"><?= $students_of_year ?></p>
@@ -223,7 +285,7 @@ $school_info = $schoolInfoObj->get();
                 </div>
 
                 <div class="col-md-3 col-12">
-                    <div class="card text-center shadow-sm">
+                    <div class="card dashboard-card text-center">
                         <div class="card-body">
                             <h5 class="card-title">Downloads Management</h5>
                             <p class="display-6 fw-bold text-primary"><?= $forms_count ?></p>

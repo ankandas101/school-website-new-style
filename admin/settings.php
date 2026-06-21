@@ -170,9 +170,47 @@ class SEOSettings {
     }
 }
 
+class SchoolStatistics {
+    private $conn;
+    public function __construct($conn) { $this->conn = $conn; }
+
+    public function getAll() {
+        $sql = 'SELECT * FROM school_statistics ORDER BY sort_order ASC, id ASC';
+        return $this->conn->query($sql);
+    }
+
+    public function get($id) {
+        $stmt = $this->conn->prepare('SELECT * FROM school_statistics WHERE id=?');
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
+    }
+
+    public function add($title, $value, $sort_order, $status) {
+        $stmt = $this->conn->prepare('INSERT INTO school_statistics (title, value, sort_order, status) VALUES (?, ?, ?, ?)');
+        $stmt->bind_param('ssii', $title, $value, $sort_order, $status);
+        return $stmt->execute();
+    }
+
+    public function update($id, $title, $value, $sort_order, $status) {
+        $stmt = $this->conn->prepare('UPDATE school_statistics SET title=?, value=?, sort_order=?, status=?, updated_at=NOW() WHERE id=?');
+        $stmt->bind_param('ssiii', $title, $value, $sort_order, $status, $id);
+        return $stmt->execute();
+    }
+
+    public function delete($id) {
+        $stmt = $this->conn->prepare('DELETE FROM school_statistics WHERE id=?');
+        $stmt->bind_param('i', $id);
+        return $stmt->execute();
+    }
+}
+
 $school = new SchoolInfo($conn);
 $footer = new FooterInfo($conn);
 $seo = new SEOSettings($conn);
+$statistics = new SchoolStatistics($conn);
+$site_settings = new SiteSettings($conn);
 $seo_pages = ['index'=>'Home', 'about'=>'About', 'contact'=>'Contact', 'notices'=>'Notices', 'teachers'=>'Teachers'];
 $school->createIfNotExists();
 $footer->createIfNotExists();
@@ -183,6 +221,10 @@ foreach (array_keys($seo_pages) as $page) {
 $success = $error = '';
 $school_info = $school->get();
 $footer_info = $footer->get();
+$meta_code = '';
+$stat_edit = null;
+$statistics_list = $statistics->getAll();
+
 // Handle school info update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_school'])) {
     $school_name = trim($_POST['school_name'] ?? '');
@@ -298,6 +340,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_google_map']))
     $success = 'Google Map embed code updated successfully.';
     $school_info = $school->get();
 }
+
+if (isset($_GET['edit_statistics'])) {
+    $edit_id = intval($_GET['edit_statistics']);
+    $stat_edit = $statistics->get($edit_id);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_statistics'])) {
+    $stat_id = intval($_POST['stat_id'] ?? 0);
+    $title = trim($_POST['title'] ?? '');
+    $value = trim($_POST['value'] ?? '');
+    $sort_order = intval($_POST['sort_order'] ?? 1);
+    $status = intval($_POST['status'] ?? 1);
+
+    if ($title !== '' && $value !== '') {
+        if ($stat_id > 0) {
+            if ($statistics->update($stat_id, $title, $value, $sort_order, $status)) {
+                $success = 'Statistic updated successfully!';
+            } else {
+                $error = 'Failed to update statistic.';
+            }
+        } else {
+            if ($statistics->add($title, $value, $sort_order, $status)) {
+                $success = 'Statistic added successfully!';
+            } else {
+                $error = 'Failed to add statistic.';
+            }
+        }
+        $statistics_list = $statistics->getAll();
+        $stat_edit = null;
+    } else {
+        $error = 'Title and value are required.';
+    }
+}
+
+if (isset($_GET['delete_statistics'])) {
+    $delete_id = intval($_GET['delete_statistics']);
+    if ($statistics->delete($delete_id)) {
+        $success = 'Statistic deleted successfully!';
+    } else {
+        $error = 'Failed to delete statistic.';
+    }
+    header('Location: settings.php');
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_turnstile_settings'])) {
+    $site_settings->update('turnstile_site_key', trim($_POST['turnstile_site_key'] ?? ''));
+    $site_settings->update('turnstile_secret_key', trim($_POST['turnstile_secret_key'] ?? ''));
+    $site_settings->update('CloudflareTurnstile_Status', trim($_POST['turnstile_status'] ?? '0'));
+    $success = 'Turnstile settings updated successfully.';
+}
+
 // Handle meta code update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_meta_code'])) {
     $new_meta_code = $_POST['meta_code'] ?? '';
@@ -316,6 +410,115 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_meta_code'])) 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings - Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: #f5f7fb;
+        }
+
+        .settings-main {
+            padding-bottom: 3rem;
+        }
+
+        .settings-page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .settings-page-header h3 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .settings-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .settings-tabs {
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 1rem;
+        }
+
+        .settings-tabs .nav-link {
+            color: #64748b;
+            font-weight: 600;
+            border: 0;
+            border-radius: 10px 10px 0 0;
+            padding: 0.65rem 0.9rem;
+        }
+
+        .settings-tabs .nav-link.active {
+            color: #0d6efd;
+            background: #fff;
+            border-bottom: 2px solid #0d6efd;
+        }
+
+        .settings-card {
+            border: 0;
+            border-radius: 16px;
+            background: #fff;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+            height: 100%;
+        }
+
+        .settings-card .card-header {
+            border: 0;
+            border-radius: 16px 16px 0 0;
+            padding: 0.95rem 1rem;
+            font-weight: 600;
+            font-size: 0.98rem;
+        }
+
+        .settings-card .card-body {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .settings-card .form-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .settings-card .form-control,
+        .settings-card .form-select,
+        .settings-card textarea {
+            border-radius: 10px;
+            border: 1px solid #d8dee9;
+        }
+
+        .settings-card .form-control:focus,
+        .settings-card .form-select:focus,
+        .settings-card textarea:focus {
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+        }
+
+        .settings-card .btn {
+            border-radius: 10px;
+        }
+
+        .settings-card .table {
+            margin-bottom: 0;
+        }
+
+        .settings-card .table th {
+            font-size: 0.88rem;
+            white-space: nowrap;
+        }
+
+        .settings-card textarea {
+            min-height: 120px;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -329,222 +532,324 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_meta_code'])) 
     <div class="container-fluid" style="margin-top: 0;">
       <div class="row gx-0">
         <?php include '_sidebar.php'; ?>
-        <main class="col-md-9 col-lg-10 px-md-4 d-flex flex-column" style="min-height: 100vh;">
-          <div class="my-5">
-            <h3 class="mb-4">Settings</h3>
-            <a href="dashboard.php" class="btn btn-secondary mb-3">&larr; Back to Dashboard</a>
-            <a href="change_password.php" class="btn btn-primary mb-3 bi bi-key">Change Password</a>
-            <a href="admins.php" class="btn btn-primary mb-3 bi bi-person-lines-fill">Admin Users</a>
-            <a href="license.php" class="btn btn-primary mb-3 bi bi-award">License</a>
-
+        <main class="col-md-9 col-lg-10 px-md-4 d-flex flex-column settings-main">
+          <div class="my-4">
+            <div class="settings-page-header">
+                <h3>Settings</h3>
+                <div class="settings-actions">
+                    <a href="dashboard.php" class="btn btn-secondary">&larr; Back to Dashboard</a>
+                    <a href="change_password.php" class="btn btn-primary">Change Password</a>
+                    <a href="admins.php" class="btn btn-primary">Admin Users</a>
+                    <a href="license.php" class="btn btn-primary">License</a>
+                </div>
+            </div>
 
             <?php if ($success): ?><div class="alert alert-success"><?php echo $success; ?></div><?php endif; ?>
             <?php if ($error): ?><div class="alert alert-danger"><?php echo $error; ?></div><?php endif; ?>
-            <div class="row g-4">
-                
-                
-                <!-- School Info -->
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header bg-info text-white">School Info</div>
-                        <div class="card-body">
-                            <form method="post" enctype="multipart/form-data">
-                                <div class="mb-3">
-                                    <label class="form-label">Institute Name</label>
-                                    <input type="text" class="form-control" name="school_name" value="<?php echo htmlspecialchars($school_info['school_name'] ?? ''); ?>">
+
+            <ul class="nav nav-tabs settings-tabs" id="settingsTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab">Information</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats" type="button" role="tab">Statistics</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="seo-tab" data-bs-toggle="tab" data-bs-target="#seo" type="button" role="tab">SEO</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="map-tab" data-bs-toggle="tab" data-bs-target="#map" type="button" role="tab">Map</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="turnstile-tab" data-bs-toggle="tab" data-bs-target="#turnstile" type="button" role="tab">Turnstile</button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="info" role="tabpanel">
+                    <div class="row g-4">
+                        <!-- School Info -->
+                        <div class="col-md-6">
+                            <div class="card settings-card h-100">
+                                <div class="card-header bg-info text-white">School Info</div>
+                                <div class="card-body">
+                                    <form method="post" enctype="multipart/form-data">
+                                        <div class="mb-3">
+                                            <label class="form-label">Institute Name</label>
+                                            <input type="text" class="form-control" name="school_name" value="<?php echo htmlspecialchars($school_info['school_name'] ?? ''); ?>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">EIIN</label>
+                                            <input type="text" class="form-control" name="eiin" value="<?php echo htmlspecialchars($school_info['eiin'] ?? ''); ?>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Established</label>
+                                            <input type="text" class="form-control" name="established" value="<?php echo htmlspecialchars($school_info['established'] ?? ''); ?>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Address</label>
+                                            <input type="text" class="form-control" name="address" value="<?php echo htmlspecialchars($school_info['address'] ?? ''); ?>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Phone</label>
+                                            <input type="text" class="form-control" name="phone" value="<?php echo htmlspecialchars($school_info['phone'] ?? ''); ?>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Email</label>
+                                            <input type="email" class="form-control" name="email" value="<?php echo htmlspecialchars($school_info['email'] ?? ''); ?>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">About</label>
+                                            <textarea class="form-control" name="about" rows="3"><?php echo htmlspecialchars($school_info['about'] ?? ''); ?></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Logo</label><br>
+                                            <?php if (!empty($school_info['logo'])): ?>
+                                                <img src="../assets/images/<?php echo htmlspecialchars($school_info['logo']); ?>" width="60" class="mb-2" alt="Logo">
+                                            <?php endif; ?>
+                                            <input type="file" class="form-control" name="logo" accept=".jpg,.jpeg,.png,.webp">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Banner</label><br>
+                                            <?php if (!empty($school_info['banner'])): ?>
+                                                <img src="../assets/images/<?php echo htmlspecialchars($school_info['banner']); ?>" width="120" class="mb-2" alt="Banner">
+                                            <?php endif; ?>
+                                            <input type="file" class="form-control" name="banner" accept=".jpg,.jpeg,.png,.webp">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">MPO Code</label>
+                                            <input type="text" class="form-control" name="mpo_code" value="<?php echo htmlspecialchars($school_info['mpo_code'] ?? ''); ?>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Institute Code </label>
+                                            <input type="text" class="form-control" name="school_code" value="<?php echo htmlspecialchars($school_info['school_code'] ?? ''); ?>">
+                                        </div>
+                                        <button type="submit" name="update_school" class="btn btn-info">Update Institute Info</button>
+                                    </form>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">EIIN</label>
-                                    <input type="text" class="form-control" name="eiin" value="<?php echo htmlspecialchars($school_info['eiin'] ?? ''); ?>">
+                            </div>
+                        </div>
+
+                        <!-- Footer/Contact Info -->
+                        <div class="col-md-6">
+                            <div class="card settings-card h-100">
+                                <div class="card-header bg-success text-white">Footer & Contact Info</div>
+                                <div class="card-body">
+                                    <form method="post" enctype="multipart/form-data">
+                                        <div class="mb-3">
+                                            <label class="form-label">Address</label>
+                                            <input type="text" class="form-control" name="address" value="<?php echo htmlspecialchars($footer_info['address'] ?? ''); ?>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Phone</label>
+                                            <input type="text" class="form-control" name="phone" value="<?php echo htmlspecialchars($footer_info['phone'] ?? ''); ?>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Email</label>
+                                            <input type="email" class="form-control" name="email" value="<?php echo htmlspecialchars($footer_info['email'] ?? ''); ?>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Facebook</label>
+                                            <input type="url" class="form-control" name="facebook" value="<?php echo htmlspecialchars($footer_info['facebook'] ?? ''); ?>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Twitter</label>
+                                            <input type="url" class="form-control" name="twitter" value="<?php echo htmlspecialchars($footer_info['twitter'] ?? ''); ?>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">YouTube</label>
+                                            <input type="url" class="form-control" name="youtube" value="<?php echo htmlspecialchars($footer_info['youtube'] ?? ''); ?>">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Short Details</label>
+                                            <textarea class="form-control" name="footer_short" rows="2"><?php echo htmlspecialchars($footer_info['footer_short'] ?? ''); ?></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Footer Logo</label><br>
+                                            <?php if (!empty($footer_info['footer_logo'])): ?>
+                                                <img src="../assets/images/<?php echo htmlspecialchars($footer_info['footer_logo']); ?>" width="60" class="mb-2" alt="Footer Logo">
+                                            <?php endif; ?>
+                                            <input type="file" class="form-control" name="footer_logo" accept=".jpg,.jpeg,.png,.webp">
+                                        </div>
+                                        <button type="submit" name="update_footer" class="btn btn-success">Update Footer/Contact Info</button>
+                                    </form>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Established</label>
-                                    <input type="text" class="form-control" name="established" value="<?php echo htmlspecialchars($school_info['established'] ?? ''); ?>">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Address</label>
-                                    <input type="text" class="form-control" name="address" value="<?php echo htmlspecialchars($school_info['address'] ?? ''); ?>">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Phone</label>
-                                    <input type="text" class="form-control" name="phone" value="<?php echo htmlspecialchars($school_info['phone'] ?? ''); ?>">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Email</label>
-                                    <input type="email" class="form-control" name="email" value="<?php echo htmlspecialchars($school_info['email'] ?? ''); ?>">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">About</label>
-                                    <textarea class="form-control" name="about" rows="3"><?php echo htmlspecialchars($school_info['about'] ?? ''); ?></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Logo</label><br>
-                                    <?php if (!empty($school_info['logo'])): ?>
-                                        <img src="../assets/images/<?php echo htmlspecialchars($school_info['logo']); ?>" width="60" class="mb-2" alt="Logo">
-                                    <?php endif; ?>
-                                    <input type="file" class="form-control" name="logo" accept=".jpg,.jpeg,.png,.webp">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Banner</label><br>
-                                    <?php if (!empty($school_info['banner'])): ?>
-                                        <img src="../assets/images/<?php echo htmlspecialchars($school_info['banner']); ?>" width="120" class="mb-2" alt="Banner">
-                                    <?php endif; ?>
-                                    <input type="file" class="form-control" name="banner" accept=".jpg,.jpeg,.png,.webp">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">MPO Code</label>
-                                    <input type="text" class="form-control" name="mpo_code" value="<?php echo htmlspecialchars($school_info['mpo_code'] ?? ''); ?>">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Institute Code </label>
-                                    <input type="text" class="form-control" name="school_code" value="<?php echo htmlspecialchars($school_info['school_code'] ?? ''); ?>">
-                                </div>
-                                <button type="submit" name="update_school" class="btn btn-info">Update Institute Info</button>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <!-- Footer/Contact Info -->
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header bg-success text-white">Footer & Contact Info</div>
-                        <div class="card-body">
-                            <form method="post" enctype="multipart/form-data">
-                                <div class="mb-3">
-                                    <label class="form-label">Address</label>
-                                    <input type="text" class="form-control" name="address" value="<?php echo htmlspecialchars($footer_info['address'] ?? ''); ?>">
+
+                <div class="tab-pane fade" id="stats" role="tabpanel">
+                    <div class="row g-4">
+                        <div class="col-12">
+                            <div class="card settings-card h-100">
+                                <div class="card-header bg-dark text-white">School Statistics</div>
+                                <div class="card-body">
+                                    <form method="post" class="mb-4">
+                                        <input type="hidden" name="stat_id" value="<?php echo intval($stat_edit['id'] ?? 0); ?>">
+                                        <div class="row g-3">
+                                            <div class="col-md-4">
+                                                <label class="form-label">Title</label>
+                                                <input type="text" class="form-control" name="title" value="<?php echo htmlspecialchars($stat_edit['title'] ?? ''); ?>" required>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Value</label>
+                                                <input type="text" class="form-control" name="value" value="<?php echo htmlspecialchars($stat_edit['value'] ?? ''); ?>" required>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label">Sort Order</label>
+                                                <input type="number" class="form-control" name="sort_order" value="<?php echo htmlspecialchars((string)($stat_edit['sort_order'] ?? 1)); ?>" min="1">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label">Status</label>
+                                                <select class="form-select" name="status">
+                                                    <option value="1" <?php echo (($stat_edit['status'] ?? 1) == 1) ? 'selected' : ''; ?>>Active</option>
+                                                    <option value="0" <?php echo (($stat_edit['status'] ?? 1) == 0) ? 'selected' : ''; ?>>Inactive</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-1 d-flex align-items-end">
+                                                <button type="submit" name="save_statistics" class="btn btn-dark w-100">Save</button>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped align-middle mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Title</th>
+                                                    <th>Value</th>
+                                                    <th>Order</th>
+                                                    <th>Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php if ($statistics_list && $statistics_list->num_rows > 0): $i=1; while ($row = $statistics_list->fetch_assoc()): ?>
+                                                <tr>
+                                                    <td><?php echo $i++; ?></td>
+                                                    <td><?php echo htmlspecialchars($row['title']); ?></td>
+                                                    <td><?php echo htmlspecialchars($row['value']); ?></td>
+                                                    <td><?php echo htmlspecialchars((string)$row['sort_order']); ?></td>
+                                                    <td><?php echo $row['status'] ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>'; ?></td>
+                                                    <td>
+                                                        <a href="settings.php?edit_statistics=<?php echo $row['id']; ?>" class="btn btn-sm btn-primary">Edit</a>
+                                                        <a href="settings.php?delete_statistics=<?php echo $row['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this statistic?');">Delete</a>
+                                                    </td>
+                                                </tr>
+                                                <?php endwhile; else: ?>
+                                                <tr><td colspan="6" class="text-center">No statistics found.</td></tr>
+                                                <?php endif; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Phone</label>
-                                    <input type="text" class="form-control" name="phone" value="<?php echo htmlspecialchars($footer_info['phone'] ?? ''); ?>">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Email</label>
-                                    <input type="email" class="form-control" name="email" value="<?php echo htmlspecialchars($footer_info['email'] ?? ''); ?>">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Facebook</label>
-                                    <input type="url" class="form-control" name="facebook" value="<?php echo htmlspecialchars($footer_info['facebook'] ?? ''); ?>">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Twitter</label>
-                                    <input type="url" class="form-control" name="twitter" value="<?php echo htmlspecialchars($footer_info['twitter'] ?? ''); ?>">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">YouTube</label>
-                                    <input type="url" class="form-control" name="youtube" value="<?php echo htmlspecialchars($footer_info['youtube'] ?? ''); ?>">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Short Details</label>
-                                    <textarea class="form-control" name="footer_short" rows="2"><?php echo htmlspecialchars($footer_info['footer_short'] ?? ''); ?></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Footer Logo</label><br>
-                                    <?php if (!empty($footer_info['footer_logo'])): ?>
-                                        <img src="../assets/images/<?php echo htmlspecialchars($footer_info['footer_logo']); ?>" width="60" class="mb-2" alt="Footer Logo">
-                                    <?php endif; ?>
-                                    <input type="file" class="form-control" name="footer_logo" accept=".jpg,.jpeg,.png,.webp">
-                                </div>
-                                <button type="submit" name="update_footer" class="btn btn-success">Update Footer/Contact Info</button>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- Google Map Embed Section -->
-            <div class="row g-4 mt-4">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header bg-info text-white"> Location Map</div>
-                        <div class="card-body text-center">
+
+                <div class="tab-pane fade" id="seo" role="tabpanel">
+                    <div class="row g-4">
+                        <div class="col-12">
+                            <div class="card settings-card h-100">
+                                <div class="card-header bg-warning text-dark">SEO Settings</div>
+                                <div class="card-body">
+                                    <?php foreach ($seo_pages as $page => $label): $seo_data = $seo->get($page); ?>
+                                    <form method="post" class="mb-4">
+                                        <input type="hidden" name="seo_page" value="<?php echo $page; ?>">
+                                        <h6><?php echo $label; ?> Page</h6>
+                                        <div class="mb-2">
+                                            <label class="form-label">Meta Title</label>
+                                            <input type="text" class="form-control" name="meta_title" value="<?php echo htmlspecialchars($seo_data['meta_title'] ?? ''); ?>">
+                                        </div>
+                                        <div class="mb-2">
+                                            <label class="form-label">Meta Description</label>
+                                            <textarea class="form-control" name="meta_description" rows="2"><?php echo htmlspecialchars($seo_data['meta_description'] ?? ''); ?></textarea>
+                                        </div>
+                                        <div class="mb-2">
+                                            <label class="form-label">Meta Keywords</label>
+                                            <input type="text" class="form-control" name="meta_keywords" value="<?php echo htmlspecialchars($seo_data['meta_keywords'] ?? ''); ?>">
+                                        </div>
+                                        <button type="submit" name="update_seo" class="btn btn-warning btn-sm">Update SEO</button>
+                                    </form>
+                                    <hr>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-4 mt-4">
+                      <div class="col-12">
+                        <div class="card settings-card h-100">
+                          <div class="card-header bg-secondary text-white">Meta Code (for &lt;head&gt;)</div>
+                          <div class="card-body">
                             <form method="post">
-                                <div class="mb-3">
-                                    <label class="form-label">Google Map Embed Code</label>
-                                    <textarea class="form-control" name="google_map" rows="4"><?php echo htmlspecialchars($school_info['google_map'] ?? ''); ?></textarea>
-                                </div>
-                                <button type="submit" name="update_google_map" class="btn btn-info">Update Map</button>
+                              <div class="mb-3">
+                                <label class="form-label">Meta Code (HTML, will be added before &lt;/head&gt;)</label>
+                                <textarea class="form-control" name="meta_code" rows="5"><?php echo htmlspecialchars($meta_code); ?></textarea>
+                              </div>
+                              <button type="submit" name="update_meta_code" class="btn btn-secondary">Update Meta Code</button>
                             </form>
+                          </div>
                         </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row g-4 mt-4">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header bg-warning text-dark">SEO Settings</div>
-                        <div class="card-body">
-                            <?php foreach ($seo_pages as $page => $label): $seo_data = $seo->get($page); ?>
-                            <form method="post" class="mb-4">
-                                <input type="hidden" name="seo_page" value="<?php echo $page; ?>">
-                                <h6><?php echo $label; ?> Page</h6>
-                                <div class="mb-2">
-                                    <label class="form-label">Meta Title</label>
-                                    <input type="text" class="form-control" name="meta_title" value="<?php echo htmlspecialchars($seo_data['meta_title'] ?? ''); ?>">
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Meta Description</label>
-                                    <textarea class="form-control" name="meta_description" rows="2"><?php echo htmlspecialchars($seo_data['meta_description'] ?? ''); ?></textarea>
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Meta Keywords</label>
-                                    <input type="text" class="form-control" name="meta_keywords" value="<?php echo htmlspecialchars($seo_data['meta_keywords'] ?? ''); ?>">
-                                </div>
-                                <button type="submit" name="update_seo" class="btn btn-warning btn-sm">Update SEO</button>
-                            </form>
-                            <hr>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row g-4 mt-4">
-              <div class="col-12">
-                <div class="card">
-                  <div class="card-header bg-secondary text-white">Meta Code (for &lt;head&gt;)</div>
-                  <div class="card-body">
-                    <form method="post">
-                      <div class="mb-3">
-                        <label class="form-label">Meta Code (HTML, will be added before &lt;/head&gt;)</label>
-                        <textarea class="form-control" name="meta_code" rows="5"><?php echo htmlspecialchars($meta_code); ?></textarea>
                       </div>
-                      <button type="submit" name="update_meta_code" class="btn btn-secondary">Update Meta Code</button>
-                    </form>
-                  </div>
+                    </div>
                 </div>
-              </div>
 
-<!-- Cloudflare Turnstile Settings -->
-                <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-header bg-primary text-white">Cloudflare Turnstile Settings</div>
-                        <div class="card-body">
-                            <form method="post">
-                                <input type="hidden" name="update_turnstile_settings" value="1">
-                                <div class="mb-3">
-                                    <label for="turnstile_site_key" class="form-label">Site Key</label>
-                                    <input type="text" class="form-control" id="turnstile_site_key" name="turnstile_site_key" value="<?php echo htmlspecialchars($site_settings->get('turnstile_site_key')); ?>" required>
-                                    <div class="form-text">Your Cloudflare Turnstile site key</div>
+                <div class="tab-pane fade" id="map" role="tabpanel">
+                    <div class="row g-4">
+                        <div class="col-12">
+                            <div class="card settings-card h-100">
+                                <div class="card-header bg-info text-white">Location Map</div>
+                                <div class="card-body text-center">
+                                    <form method="post">
+                                        <div class="mb-3">
+                                            <label class="form-label">Google Map Embed Code</label>
+                                            <textarea class="form-control" name="google_map" rows="4"><?php echo htmlspecialchars($school_info['google_map'] ?? ''); ?></textarea>
+                                        </div>
+                                        <button type="submit" name="update_google_map" class="btn btn-info">Update Map</button>
+                                    </form>
                                 </div>
-                                <div class="mb-3">
-                                    <label for="turnstile_secret_key" class="form-label">Secret Key</label>
-                                    <input type="text" class="form-control" id="turnstile_secret_key" name="turnstile_secret_key" value="<?php echo htmlspecialchars($site_settings->get('turnstile_secret_key')); ?>" required>
-                                    <div class="form-text">Your Cloudflare Turnstile secret key</div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="turnstile_status" class="form-label">Turnstile Status</label>
-                                    <select class="form-select" id="turnstile_status" name="turnstile_status">
-                                        <option value="1" <?php echo $site_settings->get('CloudflareTurnstile_Status') === '1' ? 'selected' : ''; ?>>Active</option>
-                                        <option value="0" <?php echo $site_settings->get('CloudflareTurnstile_Status') === '0' ? 'selected' : ''; ?>>Inactive</option>
-                                    </select>
-                                    <div class="form-text">Enable or disable Cloudflare Turnstile captcha on the login page</div>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Update Turnstile Settings</button>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
 
+                <div class="tab-pane fade" id="turnstile" role="tabpanel">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="card settings-card h-100 mb-4">
+                                <div class="card-header bg-primary text-white">Cloudflare Turnstile Settings</div>
+                                <div class="card-body">
+                                    <form method="post">
+                                        <input type="hidden" name="update_turnstile_settings" value="1">
+                                        <div class="mb-3">
+                                            <label for="turnstile_site_key" class="form-label">Site Key</label>
+                                            <input type="text" class="form-control" id="turnstile_site_key" name="turnstile_site_key" value="<?php echo htmlspecialchars($site_settings->get('turnstile_site_key')); ?>" required>
+                                            <div class="form-text">Your Cloudflare Turnstile site key</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="turnstile_secret_key" class="form-label">Secret Key</label>
+                                            <input type="text" class="form-control" id="turnstile_secret_key" name="turnstile_secret_key" value="<?php echo htmlspecialchars($site_settings->get('turnstile_secret_key')); ?>" required>
+                                            <div class="form-text">Your Cloudflare Turnstile secret key</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="turnstile_status" class="form-label">Turnstile Status</label>
+                                            <select class="form-select" id="turnstile_status" name="turnstile_status">
+                                                <option value="1" <?php echo $site_settings->get('CloudflareTurnstile_Status') === '1' ? 'selected' : ''; ?>>Active</option>
+                                                <option value="0" <?php echo $site_settings->get('CloudflareTurnstile_Status') === '0' ? 'selected' : ''; ?>>Inactive</option>
+                                            </select>
+                                            <div class="form-text">Enable or disable Cloudflare Turnstile captcha on the login page</div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Update Turnstile Settings</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
           </div>
         </main>

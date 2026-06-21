@@ -47,18 +47,17 @@ $license_expiry_date = $license_info['license_expiry_date'] ?? '2030-12-31';
                     <p class="mb-1"><strong>License To: </strong> <?php echo htmlspecialchars($license_info['license_to']); ?></p>
                     <p class="mb-1"><strong>License Type: </strong> <?php echo htmlspecialchars($license_info['license_type']); ?></p>
                     <p class="mb-1"><strong>License Key: </strong>jbjadbja-dajdajbd-adad74-add12rt</p>
-
                     <hr>
                     <h5 class="card-title mb-3">Company Details</h5>
                     <p class="mb-1"><strong>Company Name:</strong><?php echo htmlspecialchars($license_info['company_name'] ?? ''); ?></p>
                     <p class="mb-1"><strong>Company Address:</strong> <?php echo htmlspecialchars($license_info['company_address'] ?? ''); ?></p>
                     <p class="mb-1"><strong>Support Line:</strong> +8801745009934</p>
-                   <!-- <p class="mb-1"><strong>Facebook:</strong> 
+                   <p class="mb-1"><strong>Developer Profile:</strong> 
                       <?php if (!empty($license_info['facebook'])): ?>
                         <a href="<?php echo htmlspecialchars($license_info['facebook']); ?>" target="_blank"> Click Here</a>
                       <?php endif; ?>
                     </p>
-                      -->
+                    
                   </div>
                 </div>
               </div>
@@ -66,16 +65,16 @@ $license_expiry_date = $license_info['license_expiry_date'] ?? '2030-12-31';
                 <div class="card shadow-sm mb-4">
                   <div class="card-body">
                     <h5 class="card-title mb-3">Update Information</h5>
-                    <p class="mb-1"><strong>Current Version:</strong> V1.9</p>
-                    <p class="mb-1"><strong>Release Date:</strong> 07-12-2025</p>
+                    <p class="mb-1"><strong>Current Version:</strong> V2.0</p>
+                    <p class="mb-1"><strong>Release Date:</strong> 21-06-2026</p>
                     <hr>
                     <h5 class="card-title mb-3">Change Logs</h5>
                     <ul class="mb-0">
-                      <li>New Statistics added</li>
-                      <li>New Result System added</li>
+                      <li>New Homepage Design</li>
+                      <li>Alpine.js Integration</li>
                       <li>Improve performance</li>
-                      <li>All khown bugs fixed</li>
-                      <li>New design added</li>
+                      <li>All known bugs fixed</li>
+                      <li>New sidebar added</li>
                       <li>Caches Update</li>
                     </ul>
                   </div>

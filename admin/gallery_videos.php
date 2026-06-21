@@ -81,14 +81,15 @@ $videos = $conn->query('SELECT * FROM gallery_videos ORDER BY id DESC');
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
   <style>
     body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      background: #f5f7fb;
+      overflow-x: hidden;
     }
     main {
       padding-top: 20px;
     }
-    /* Video card full height */
+    .page-panel {
+      padding: 1.25rem;
+    }
     .card.h-100 {
       height: 100%;
     }
@@ -96,27 +97,20 @@ $videos = $conn->query('SELECT * FROM gallery_videos ORDER BY id DESC');
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container-fluid">
+    <div class="container-fluid px-3 px-lg-4">
       <a class="navbar-brand" href="dashboard.php">Admin Dashboard</a>
-      <button class="navbar-toggler d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle sidebar">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="d-none d-md-flex ms-auto">
+      <div class="ms-auto">
         <a href="logout.php" class="btn btn-outline-light btn-sm">Logout</a>
       </div>
     </div>
   </nav>
 
   <div class="container-fluid">
-    <div class="row">
-      <!-- Sidebar -->
-      <nav id="sidebarMenu" class="collapse d-md-block bg-light sidebar shadow-sm rounded-3 p-3 col-md-3 col-lg-2" style="min-height: 100vh;">
-        <?php include '_sidebar.php'; ?>
-      </nav>
+    <div class="row gx-0">
+      <?php include '_sidebar.php'; ?>
 
-      <!-- Main Content -->
-      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-        <h3 class="mb-4 mt-4">Video Gallery Management</h3>
+      <main class="col-12 col-md-9 col-lg-10 page-panel">
+        <h3 class="mb-4 mt-2">Video Gallery Management</h3>
         <a href="dashboard.php" class="btn btn-secondary mb-3">&larr; Back to Dashboard</a>
 
         <?php echo $msg; ?>
