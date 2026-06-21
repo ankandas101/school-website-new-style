@@ -1,0 +1,12 @@
+# Prevent directory listing
+Options -Indexes
+
+# Prevent PHP execution in includes
+<FilesMatch "\.(php|php5|phtml)$">
+    Deny from all
+</FilesMatch>
+
+<FilesMatch "^(db\.php|database\.php)$">
+Order allow,deny
+Deny from all
+</FilesMatch>

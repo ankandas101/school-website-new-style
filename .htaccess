@@ -1,0 +1,154 @@
+# ============================================
+# Enable Rewrite Engine
+# ============================================
+RewriteEngine On
+
+# ============================================
+# Custom 404 Page
+# ============================================
+ErrorDocument 404 /404.php
+
+
+# ============================================
+# ALLOW ADMIN PANEL (IMPORTANT)
+# ============================================
+RewriteCond %{REQUEST_URI} ^/admin/ [NC]
+RewriteRule ^ - [L]
+
+
+# ============================================
+# Allow Only Safe Bots
+# ============================================
+RewriteCond %{HTTP_USER_AGENT} (googlebot|bingbot|mj12bot|applebot|facebook|meta|discord|slurp|gptbot|openai) [NC]
+RewriteRule ^ - [L]
+
+
+# ============================================
+# Block XSS Attempts (PUBLIC ONLY)
+# ============================================
+RewriteCond %{REQUEST_URI} !^/admin/ [NC]
+RewriteCond %{QUERY_STRING} (<|%3C)(script|img|iframe|object|svg|body|on\w+|javascript) [NC]
+RewriteRule ^ - [F]
+
+RewriteCond %{REQUEST_URI} !^/admin/ [NC]
+RewriteCond %{QUERY_STRING} (javascript:|data:text/html) [NC]
+RewriteRule ^ - [F]
+
+
+# ============================================
+# SQL Injection Filter (PUBLIC ONLY)
+# ============================================
+RewriteCond %{REQUEST_URI} !^/admin/ [NC]
+RewriteCond %{QUERY_STRING} (\bunion\b|\bselect\b|\binsert\b|\bdrop\b|\bupdate\b) [NC]
+RewriteRule ^ - [F]
+
+
+# ============================================
+# Bad Bot Blocking
+# ============================================
+RewriteCond %{HTTP_USER_AGENT} (sqlmap|acunetix|netsparker|crawler|scanner|python-requests|curl/7) [NC]
+RewriteRule ^ - [F]
+
+
+# ============================================
+# Secure Hidden Files
+# ============================================
+<FilesMatch "^\.(?!well-known)">
+    Require all denied
+</FilesMatch>
+
+
+# ============================================
+# Sitemap Rewrite
+# ============================================
+RewriteRule ^sitemap\.xml$ sitemap.php [L]
+
+
+# ============================================
+# AVIF / WebP Auto Serve
+# ============================================
+RewriteCond %{REQUEST_FILENAME} (.+)\.(jpe?g|png)$ [NC]
+RewriteCond %1.avif -f
+RewriteCond %{HTTP_ACCEPT} image/avif
+RewriteRule ^(.+)\.(jpe?g|png)$ $1.avif [T=image/avif,E=accept_avif:1,L]
+
+RewriteCond %{REQUEST_FILENAME} (.+)\.(jpe?g|png)$ [NC]
+RewriteCond %1.webp -f
+RewriteCond %{HTTP_ACCEPT} image/webp
+RewriteRule ^(.+)\.(jpe?g|png)$ $1.webp [T=image/webp,E=accept_webp:1,L]
+
+
+# ============================================
+# MIME Types
+# ============================================
+<IfModule mod_mime.c>
+    AddType image/avif .avif
+    AddType image/webp .webp
+</IfModule>
+
+
+# ============================================
+# Browser Caching
+# ============================================
+<IfModule mod_expires.c>
+    ExpiresActive On
+
+    ExpiresByType image/jpg "access plus 6 months"
+    ExpiresByType image/jpeg "access plus 6 months"
+    ExpiresByType image/png "access plus 6 months"
+    ExpiresByType image/gif "access plus 6 months"
+    ExpiresByType image/webp "access plus 6 months"
+    ExpiresByType image/svg+xml "access plus 6 months"
+
+    ExpiresByType text/css "access plus 3 months"
+    ExpiresByType application/javascript "access plus 3 months"
+
+    ExpiresByType font/woff "access plus 6 months"
+    ExpiresByType font/woff2 "access plus 6 months"
+
+    ExpiresByType text/html "access plus 5 minutes"
+</IfModule>
+
+
+# ============================================
+# Gzip Compression
+# ============================================
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+
+# ============================================
+# Cache-Control
+# ============================================
+<IfModule mod_headers.c>
+    <FilesMatch "\.(ico|css|js|gif|jpg|jpeg|png|webp|svg|woff|woff2)$">
+        Header set Cache-Control "public, max-age=15552000, immutable"
+    </FilesMatch>
+
+    <FilesMatch "\.(html|php)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </FilesMatch>
+</IfModule>
+
+
+# ============================================
+# Security Headers
+# ============================================
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+    Header append Vary Accept env=accept_avif
+    Header append Vary Accept env=accept_webp
+</IfModule>
+
+
+# ============================================
+# Disable Directory Browsing
+# ============================================
+Options -Indexes

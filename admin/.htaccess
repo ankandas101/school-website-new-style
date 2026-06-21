@@ -1,0 +1,7 @@
+# Prevent directory listing
+Options -Indexes
+
+# (Optional) Prevent PHP execution in admin folder
+# <FilesMatch "\.(php|php5|phtml)$">
+#     Deny from all
+# </FilesMatch> 
