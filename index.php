@@ -169,7 +169,7 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
         <div class="notice-board-body">
           <?php
           $noticesSidebar = new Notice($conn);
-          $sidebar_notices = $noticesSidebar->getActive(5);
+          $sidebar_notices = $noticesSidebar->getActive(6);
           if ($sidebar_notices && $sidebar_notices->num_rows > 0):
             $notice_colors = ['#e53e3e','#f59e0b','#3b82f6','#22c55e','#8b5cf6'];
             $ni = 0;
