@@ -171,6 +171,42 @@ class SEOSettings {
     }
 }
 
+class SchoolSchedule {
+    private $conn;
+    public function __construct($conn) { $this->conn = $conn; }
+
+    public function getAll() {
+        $sql = 'SELECT * FROM schedules ORDER BY sort_order ASC, id ASC';
+        return $this->conn->query($sql);
+    }
+
+    public function get($id) {
+        $stmt = $this->conn->prepare('SELECT * FROM schedules WHERE id=?');
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        return $result->fetch_assoc();
+    }
+
+    public function add($title, $time_value, $sort_order, $status) {
+        $stmt = $this->conn->prepare('INSERT INTO schedules (title, time_value, sort_order, status) VALUES (?, ?, ?, ?)');
+        $stmt->bind_param('ssii', $title, $time_value, $sort_order, $status);
+        return $stmt->execute();
+    }
+
+    public function update($id, $title, $time_value, $sort_order, $status) {
+        $stmt = $this->conn->prepare('UPDATE schedules SET title=?, time_value=?, sort_order=?, status=?, updated_at=NOW() WHERE id=?');
+        $stmt->bind_param('ssiii', $title, $time_value, $sort_order, $status, $id);
+        return $stmt->execute();
+    }
+
+    public function delete($id) {
+        $stmt = $this->conn->prepare('DELETE FROM schedules WHERE id=?');
+        $stmt->bind_param('i', $id);
+        return $stmt->execute();
+    }
+}
+
 class SchoolStatistics {
     private $conn;
     public function __construct($conn) { $this->conn = $conn; }
@@ -219,12 +255,15 @@ foreach (array_keys($seo_pages) as $page) {
     $seo->createIfNotExists($page);
 }
 
+$schedule = new SchoolSchedule($conn);
 $success = $error = '';
 $school_info = $school->get();
 $footer_info = $footer->get();
 $meta_code = '';
 $stat_edit = null;
 $statistics_list = $statistics->getAll();
+$schedule_edit = null;
+$schedules_list = $schedule->getAll();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !verify_csrf_token($_POST['csrf_token'] ?? '')) {
     $error = 'Invalid security token. Please try again.';
@@ -385,7 +424,53 @@ if (isset($_GET['delete_statistics'])) {
     } else {
         $error = 'Failed to delete statistic.';
     }
-    header('Location: settings.php');
+    $tab_param = isset($_GET['tab']) ? '?tab=' . urlencode($_GET['tab']) : '';
+    header('Location: settings.php' . $tab_param);
+    exit;
+}
+
+if (isset($_GET['edit_schedule'])) {
+    $edit_id = intval($_GET['edit_schedule']);
+    $schedule_edit = $schedule->get($edit_id);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_schedule'])) {
+    $sched_id = intval($_POST['sched_id'] ?? 0);
+    $title = trim($_POST['title'] ?? '');
+    $time_value = trim($_POST['time_value'] ?? '');
+    $sort_order = intval($_POST['sort_order'] ?? 1);
+    $status = intval($_POST['status'] ?? 1);
+
+    if ($title !== '' && $time_value !== '') {
+        if ($sched_id > 0) {
+            if ($schedule->update($sched_id, $title, $time_value, $sort_order, $status)) {
+                $success = 'Schedule updated successfully!';
+            } else {
+                $error = 'Failed to update schedule.';
+            }
+        } else {
+            if ($schedule->add($title, $time_value, $sort_order, $status)) {
+                $success = 'Schedule added successfully!';
+            } else {
+                $error = 'Failed to add schedule.';
+            }
+        }
+        $schedules_list = $schedule->getAll();
+        $schedule_edit = null;
+    } else {
+        $error = 'Title and time value are required.';
+    }
+}
+
+if (isset($_GET['delete_schedule'])) {
+    $delete_id = intval($_GET['delete_schedule']);
+    if ($schedule->delete($delete_id)) {
+        $success = 'Schedule deleted successfully!';
+    } else {
+        $error = 'Failed to delete schedule.';
+    }
+    $tab_param = isset($_GET['tab']) ? '?tab=' . urlencode($_GET['tab']) : '';
+    header('Location: settings.php' . $tab_param);
     exit;
 }
 
@@ -568,6 +653,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_meta_code'])) 
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="turnstile-tab" data-bs-toggle="tab" data-bs-target="#turnstile" type="button" role="tab">Turnstile</button>
                 </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="schedule-tab" data-bs-toggle="tab" data-bs-target="#schedule" type="button" role="tab">Schedule</button>
+                </li>
             </ul>
 
             <div class="tab-content">
@@ -742,8 +830,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_meta_code'])) 
                                                     <td><?php echo htmlspecialchars((string)$row['sort_order']); ?></td>
                                                     <td><?php echo $row['status'] ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>'; ?></td>
                                                     <td>
-                                                        <a href="settings.php?edit_statistics=<?php echo $row['id']; ?>" class="btn btn-sm btn-primary">Edit</a>
-                                                        <a href="settings.php?delete_statistics=<?php echo $row['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this statistic?');">Delete</a>
+                                                        <a href="settings.php?edit_statistics=<?php echo $row['id']; ?>&tab=stats" class="btn btn-sm btn-primary">Edit</a>
+                                                        <a href="settings.php?delete_statistics=<?php echo $row['id']; ?>&tab=stats" class="btn btn-sm btn-danger" onclick="return confirm('Delete this statistic?');">Delete</a>
                                                     </td>
                                                 </tr>
                                                 <?php endwhile; else: ?>
@@ -862,11 +950,96 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_meta_code'])) 
                         </div>
                     </div>
                 </div>
+
+                <div class="tab-pane fade" id="schedule" role="tabpanel">
+                    <div class="row g-4">
+                        <div class="col-12">
+                            <div class="card settings-card h-100">
+                                <div class="card-header bg-info text-white">School Schedule</div>
+                                <div class="card-body">
+                                    <form method="post" class="mb-4">
+                                        <?php echo csrf_field(); ?>
+                                        <input type="hidden" name="sched_id" value="<?php echo intval($schedule_edit['id'] ?? 0); ?>">
+                                        <div class="row g-3">
+                                            <div class="col-md-4">
+                                                <label class="form-label">Title</label>
+                                                <input type="text" class="form-control" name="title" value="<?php echo htmlspecialchars($schedule_edit['title'] ?? ''); ?>" required>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Time Value</label>
+                                                <input type="text" class="form-control" name="time_value" value="<?php echo htmlspecialchars($schedule_edit['time_value'] ?? ''); ?>" required>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label">Sort Order</label>
+                                                <input type="number" class="form-control" name="sort_order" value="<?php echo htmlspecialchars((string)($schedule_edit['sort_order'] ?? 1)); ?>" min="1">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label">Status</label>
+                                                <select class="form-select" name="status">
+                                                    <option value="1" <?php echo (($schedule_edit['status'] ?? 1) == 1) ? 'selected' : ''; ?>>Active</option>
+                                                    <option value="0" <?php echo (($schedule_edit['status'] ?? 1) == 0) ? 'selected' : ''; ?>>Inactive</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-1 d-flex align-items-end">
+                                                <button type="submit" name="save_schedule" class="btn btn-info w-100">Save</button>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped align-middle mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Title</th>
+                                                    <th>Time Value</th>
+                                                    <th>Order</th>
+                                                    <th>Status</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php if ($schedules_list && $schedules_list->num_rows > 0): $i=1; while ($row = $schedules_list->fetch_assoc()): ?>
+                                                <tr>
+                                                    <td><?php echo $i++; ?></td>
+                                                    <td><?php echo htmlspecialchars($row['title']); ?></td>
+                                                    <td><?php echo htmlspecialchars($row['time_value']); ?></td>
+                                                    <td><?php echo htmlspecialchars((string)$row['sort_order']); ?></td>
+                                                    <td><?php echo $row['status'] ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>'; ?></td>
+                                                    <td>
+                                                        <a href="settings.php?edit_schedule=<?php echo $row['id']; ?>&tab=schedule" class="btn btn-sm btn-primary">Edit</a>
+                                                        <a href="settings.php?delete_schedule=<?php echo $row['id']; ?>&tab=schedule" class="btn btn-sm btn-danger" onclick="return confirm('Delete this schedule?');">Delete</a>
+                                                    </td>
+                                                </tr>
+                                                <?php endwhile; else: ?>
+                                                <tr><td colspan="6" class="text-center">No schedules found.</td></tr>
+                                                <?php endif; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
           </div>
         </main>
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var urlParams = new URLSearchParams(window.location.search);
+        var activeTab = urlParams.get('tab');
+        if (activeTab) {
+            var tabEl = document.querySelector('#settingsTabs .nav-link[data-bs-target="#' + activeTab + '"]');
+            if (tabEl) {
+                var tab = new bootstrap.Tab(tabEl);
+                tab.show();
+            }
+        }
+    });
+    </script>
 </body>
 </html>
