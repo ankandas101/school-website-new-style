@@ -4,9 +4,9 @@ require_once __DIR__ . '/includes/classes.php';
 
 // Pagination setup
 $per_page = 10;
-$page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
-$page = (int)$page;
-$offset = ($page - 1) * $per_page;
+$current_page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
+$current_page = (int)$current_page;
+$offset = ($current_page - 1) * $per_page;
 
 // Fetch total count
 $total_result = $conn->query('SELECT COUNT(*) as total FROM notices WHERE status=1');
@@ -305,18 +305,17 @@ include_once 'includes/header.php';
       <?php endwhile; ?>
     </div>
     
-    <?php if ($total_notices > (int)$page * (int)$per_page || (int)$page > 1): ?>
+    <?php if ($total_notices > (int)$per_page): ?>
       <div class="pagination">
-        <?php if ((int)$page > 1): ?>
-          <a href="notices.php?page=<?php echo (int)$page - 1; ?>">← পূর্ববর্তী</a>
-       
-        <span>পৃষ্ঠা <?php echo (int)$page; ?></span>
-        
-
-        <?php if ((int)$total_notices > (int)$page * (int)$per_page): ?>
-          <a href="notices.php?page=<?php echo (int)$page + 1; ?>">পরবর্তী →</a>
+        <?php if ($current_page > 1): ?>
+          <a href="notices.php?page=<?php echo $current_page - 1; ?>">← পূর্ববর্তী</a>
         <?php endif; ?>
-       <?php endif; ?>  
+        
+        <span>পৃষ্ঠা <?php echo $current_page; ?></span>
+        
+        <?php if ($total_notices > $current_page * $per_page): ?>
+          <a href="notices.php?page=<?php echo $current_page + 1; ?>">পরবর্তী →</a>
+        <?php endif; ?>
       </div>
     <?php endif; ?>
   <?php else: ?>
