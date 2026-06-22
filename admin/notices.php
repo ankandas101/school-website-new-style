@@ -35,6 +35,7 @@ $notice = new Notice($conn);
 
 // Handle add
 $msg = '';
+$modal_error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_notice'])) {
     $title = trim($_POST['title'] ?? '');
     $description = trim($_POST['description'] ?? '');
@@ -44,16 +45,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_notice'])) {
     if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === UPLOAD_ERR_OK) {
         $ext = strtolower(pathinfo($_FILES['attachment']['name'], PATHINFO_EXTENSION));
         if (in_array($ext, ['pdf', 'jpg', 'jpeg', 'png', 'gif'])) {
-            $attachment = 'notice_' . time() . '_' . rand(100,999) . '.' . $ext;
-            $uploadPath = '../assets/notices/' . $attachment;
-            if (!is_dir('../assets/notices')) { mkdir('../assets/notices', 0777, true); }
-            move_uploaded_file($_FILES['attachment']['tmp_name'], $uploadPath);
+            $max_size = 500 * 1024; // 500KB
+            if ($_FILES['attachment']['size'] > $max_size) {
+                $modal_error = 'সংযুক্ত ফাইলের আকার ৫০০ কিলোবাইটের বেশি। অনুগ্রহ করে একটি ছোট ফাইল আপলোড করুন।';
+            } else {
+                $attachment = 'notice_' . time() . '_' . rand(100,999) . '.' . $ext;
+                $uploadPath = '../assets/notices/' . $attachment;
+                if (!is_dir('../assets/notices')) { mkdir('../assets/notices', 0777, true); }
+                move_uploaded_file($_FILES['attachment']['tmp_name'], $uploadPath);
+            }
         }
     }
-    if ($title && $notice->add($title, $description, $notice_date, $status, $attachment)) {
-        $msg = '<div class="alert alert-success">Notice added successfully!</div>';
-    } else {
-        $msg = '<div class="alert alert-danger">Failed to add notice. Title is required.</div>';
+    if (empty($modal_error)) {
+        if ($title && $notice->add($title, $description, $notice_date, $status, $attachment)) {
+            $msg = '<div class="alert alert-success">Notice added successfully!</div>';
+        } else {
+            $msg = '<div class="alert alert-danger">Failed to add notice. Title is required.</div>';
+        }
     }
 }
 
@@ -176,6 +184,9 @@ $notices = $notice->getAll();
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+              <?php if ($modal_error): ?>
+                <div class="alert alert-danger"><?php echo htmlspecialchars($modal_error); ?></div>
+              <?php endif; ?>
               <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
                 <input type="text" class="form-control" id="title" name="title" required>
@@ -196,8 +207,8 @@ $notices = $notice->getAll();
                 </select>
               </div>
               <div class="mb-3">
-                <label for="attachment" class="form-label">Attachment (PDF/Image)</label>
-                <input type="file" class="form-control" id="attachment" name="attachment" accept=".pdf,.jpg,.jpeg,.png,.webp,.gif">
+                <label for="attachment" class="form-label">Attachment (PDF/Image/Document)</label>
+                <input type="file" class="form-control" id="attachment" name="attachment" accept=".pdf,.jpg,.jpeg,.png,.webp,.gif,.doc,.docx,.xls,.xlsx">
               </div>
             </div>
             <div class="modal-footer">
@@ -214,6 +225,12 @@ $notices = $notice->getAll();
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+<?php if ($modal_error): ?>
+document.addEventListener('DOMContentLoaded', function() {
+    var addNoticeModal = new bootstrap.Modal(document.getElementById('addNoticeModal'));
+    addNoticeModal.show();
+});
+<?php endif; ?>
 document.querySelectorAll('.ticker-toggle').forEach(function(toggle) {
     toggle.addEventListener('change', function() {
         var noticeId = this.getAttribute('data-id');

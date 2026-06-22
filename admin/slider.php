@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_slider'])) {
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
         $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
         $valid_ext = ['jpg', 'jpeg', 'png'];
-        $max_size = 2 * 1024 * 1024; // 2MB
+        $max_size = 0.5 * 1024 * 1024; // 0.5MB
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mime = finfo_file($finfo, $_FILES['image']['tmp_name']);
         finfo_close($finfo);
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_slider'])) {
         } elseif (!in_array($mime, $valid_mime)) {
             $upload_error = 'Invalid image MIME type.';
         } elseif ($_FILES['image']['size'] > $max_size) {
-            $upload_error = 'Image file is too large. Maximum size is 2MB. Please upload a smaller image.';
+            $upload_error = 'স্লাইডার যোগ করা সম্ভব হয়নি। ছবির ফাইলটি অনেক বড়। সর্বোচ্চ আকার  500 KB । অনুগ্রহ করে 1200x700px একটি ছোট আকারের ছবি আপলোড করুন।';
         } elseif (@getimagesize($_FILES['image']['tmp_name']) === false) {
             $upload_error = 'Uploaded file is not a valid image.';
         } else {

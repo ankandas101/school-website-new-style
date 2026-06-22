@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_student'])) {
     if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
         $ext = strtolower(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION));
         $valid_ext = ['jpg', 'jpeg', 'png'];
-        $maxFileSize = 2 * 1024 * 1024; // 2MB
+        $maxFileSize = 0.5 * 1024 * 1024; // 0.5MB
 
         if (in_array($ext, $valid_ext)) {
             if ($_FILES['photo']['size'] <= $maxFileSize) {
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_student'])) {
                     $photo = '';
                 }
             } else {
-                $upload_error = 'Photo file size exceeds 2MB limit.';
+                $upload_error = 'Photo file size exceeds 500KB limit.';
             }
         } else {
             $upload_error = 'Invalid image file type.';

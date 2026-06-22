@@ -40,10 +40,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_teacher'])) {
     if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
         $ext = strtolower(pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION));
         $valid_ext = ['jpg', 'jpeg', 'png'];
-        $max_size = 2 * 1024 * 1024; // 2MB
+        $max_size = 0.5 * 1024 * 1024; // 2MB
         if (in_array($ext, $valid_ext)) {
             if ($_FILES['photo']['size'] > $max_size) {
-                $upload_error = 'Photo file is too large. Maximum size is 2MB. Please upload a smaller image.';
+                $upload_error = 'Photo file is too large. Maximum size is 500 KB. Please upload a smaller image.';
             } else {
                 $photo = 'teacher_' . time() . '_' . rand(100,999) . '.' . $ext;
                 $target_dir = dirname(__DIR__) . '/assets/images/';

@@ -943,7 +943,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_meta_code'])) 
                                             </select>
                                             <div class="form-text">Enable or disable Cloudflare Turnstile captcha on the login page</div>
                                         </div>
-                                        <button type="submit" class="btn btn-primary">Update Turnstile Settings</button>
+                                        <button type="submit" class="btn btn-primary" disabled>Update Turnstile Settings</button>
                                     </form>
                                 </div>
                             </div>
