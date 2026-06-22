@@ -53,7 +53,7 @@ img { max-width: 100%; height: auto; display: block; }
 button { font-family: inherit; cursor: pointer; }
 
 /* Smooth first-load reveal for cards/sections */
-[data-aos] {
+[data-aos].aos-init {
   opacity: 0;
   transition-property: opacity, transform;
   transition-duration: 0.6s;

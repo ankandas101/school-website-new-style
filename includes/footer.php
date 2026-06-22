@@ -162,6 +162,6 @@ $footer_info = $footer->get();
     <!-- AOS JS -->
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js" defer></script>
     <!-- Custom JS -->
-    <script src="assets/js/script.js" defer></script>
+    <script src="assets/js/script.js?v=7" defer></script>
 </body>
 </html>

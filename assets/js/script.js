@@ -37,6 +37,14 @@ function initAOS() {
                 ? (parseInt(el.getAttribute('data-aos-delay'), 10) / 1000) + 's'
                 : '0s';
         });
+
+        // Refresh AOS after page is fully loaded and layout has settled (crucial for Tailwind CDN & images layout shifts)
+        window.addEventListener('load', function () {
+            AOS.refresh();
+            setTimeout(function () {
+                AOS.refresh();
+            }, 350);
+        });
     }
 }
 

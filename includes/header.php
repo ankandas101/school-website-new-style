@@ -69,7 +69,7 @@ $keywords = ($seo_data && !empty($seo_data['meta_keywords'])) ? $seo_data['meta_
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="assets/css/style.css?v=6">
+    <link rel="stylesheet" href="assets/css/style.css?v=7">
     <!-- TailwindCSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -93,7 +93,7 @@ $keywords = ($seo_data && !empty($seo_data['meta_keywords'])) ? $seo_data['meta_
     }
     </script>
     <!-- Responsive CSS (after Tailwind so mobile overrides apply) -->
-    <link rel="stylesheet" href="assets/css/responsive.css?v=6">
+    <link rel="stylesheet" href="assets/css/responsive.css?v=7">
 </head>
 <?php if (!empty($meta_code)) echo $meta_code; ?>
 <body class="font-siliguri bg-light text-gray-800 antialiased">
