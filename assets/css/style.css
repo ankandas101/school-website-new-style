@@ -346,7 +346,7 @@ button { font-family: inherit; cursor: pointer; }
   margin-bottom: var(--spacing-md);
   text-shadow: 0 2px 8px rgba(0,0,0,0.25);
   font-size: 2.8rem;
-  max-width: 800px;
+  max-width: 100%;
 }
 
 .hero-text p {
@@ -1149,7 +1149,7 @@ button { font-family: inherit; cursor: pointer; }
 @media (min-width: 1200px) {
   .hero-text h1 {
     font-size: 3rem;
-      max-width: 700px;
+    max-width: 100%;
   }
 }
 
@@ -1157,7 +1157,7 @@ button { font-family: inherit; cursor: pointer; }
 @media (min-width: 1400px) {
   .hero-text h1 {
     font-size: 3.5rem;
-      max-width: 900px;
+    max-width: 100%;
   }
   .hero-text {
     padding: var(--spacing-3xl) var(--spacing-2xl);
@@ -1203,7 +1203,7 @@ button { font-family: inherit; cursor: pointer; }
 
   .hero-text h1 {
     font-size: 2.25rem;
-      max-width: 700px;
+    max-width: 100%;
   }
 
   .hero-swiper .swiper-slide img {
@@ -1432,6 +1432,7 @@ button { font-family: inherit; cursor: pointer; }
     flex-direction: column;
     margin-top: 50px;
     width: 50%;
+
   }
 
   .btn-hero-primary,
