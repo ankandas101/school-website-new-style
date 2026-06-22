@@ -193,4 +193,8 @@ class SchoolStatistics {
         return $stmt->get_result()->fetch_assoc();
     }
 }
-} 
+}
+
+$isSoftware = strtolower((string)env('SYSTEM_SOFTWARE', 'false')) === 'true';
+
+?>

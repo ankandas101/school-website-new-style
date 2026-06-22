@@ -14,7 +14,7 @@
         <img src="assets/images/<?php echo htmlspecialchars($school_info['logo']); ?>" alt="<?php echo htmlspecialchars($school_info['school_name'] ?? 'Logo'); ?>" style="height:44px; width:auto; border-radius:8px; object-fit:contain;" fetchpriority="high">
       <?php endif; ?>
       <div>
-        <div style="font-weight:700; font-size:0.95rem; color:#123B6A; line-height:1.25; max-width:180px;"><?php echo htmlspecialchars($school_info['school_name'] ?? 'স্কুল'); ?></div>
+        <div style="font-weight:700; font-size:0.95rem; color:#123B6A; line-height:1.25; max-width:250px;"><?php echo htmlspecialchars($school_info['school_name'] ?? 'স্কুল'); ?></div>
         <?php if (!empty($school_info['eiin'])): ?>
         <div style="font-size:0.7rem; color:#64748b;">EIIN: <?php echo htmlspecialchars($school_info['eiin']); ?></div>
         <?php endif; ?>
@@ -27,6 +27,7 @@
       <a href="index.php" class="nav-link" style="padding:8px 12px; border-radius:8px; font-size:0.88rem; font-weight:500; color:#374151; white-space:nowrap;">হোম</a>
       <a href="about.php" class="nav-link" style="padding:8px 12px; border-radius:8px; font-size:0.88rem; font-weight:500; color:#374151; white-space:nowrap;">প্রতিষ্ঠান সম্পর্কে</a>
 
+      <?php if ($isSoftware): ?>
       <!-- Dropdown: Student Corner -->
       <div style="position:relative;" x-data="{d1:false}" @mouseenter="d1=true" @mouseleave="d1=false" x-cloak>
         <button @click="d1=!d1" @click.away="d1=false" style="display:flex; align-items:center; gap:4px; padding:8px 12px; border-radius:8px; font-size:0.88rem; font-weight:500; color:#374151; background:none; border:none; cursor:pointer; white-space:nowrap;" class="nav-link">
@@ -34,13 +35,13 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" :style="d1 ? 'transform:rotate(180deg)' : ''" style="transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div x-show="d1" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" style="position:absolute; top:100%; left:0; margin-top:4px; min-width:200px; background:#fff; border-radius:12px; box-shadow:0 8px 30px rgba(18,59,106,0.14); border:1px solid #E8ECF3; padding:6px; z-index:200;">
-          <a href="<?php echo APP_URL; ?>/dashboard" class="dropdown-item">শিক্ষার্থী প্রফাইল লগইন</a>
+          <a href="<?php echo APP_URL; ?>/authentication" class="dropdown-item">শিক্ষার্থী প্রফাইল লগইন</a>
           <a href="<?php echo APP_URL; ?>/admission" class="dropdown-item">অনলাইন ভর্তি</a>
           <a href="<?php echo APP_URL; ?>/certificates" class="dropdown-item">Certificates</a>
           <a href="<?php echo APP_URL; ?>/exam_results" class="dropdown-item">Exam Results</a>
         </div>
       </div>
-
+    <?php endif; ?>
       <!-- Dropdown: Important Info -->
       <div style="position:relative;" x-data="{d2:false}" @mouseenter="d2=true" @mouseleave="d2=false" x-cloak>
         <button @click="d2=!d2" @click.away="d2=false" style="display:flex; align-items:center; gap:4px; padding:8px 12px; border-radius:8px; font-size:0.88rem; font-weight:500; color:#374151; background:none; border:none; cursor:pointer; white-space:nowrap;" class="nav-link">
@@ -98,20 +99,20 @@
     <div style="padding:0.75rem 1rem; max-height:80vh; overflow-y:auto;">
       <a href="index.php" style="display:block; padding:10px 12px; border-radius:8px; font-size:0.88rem; font-weight:500; color:#374151;">হোম</a>
       <a href="about.php" style="display:block; padding:10px 12px; border-radius:8px; font-size:0.88rem; font-weight:500; color:#374151;">প্রতিষ্ঠান সম্পর্কে</a>
-
+    <?php if ($isSoftware): ?>
       <div style="margin-top:6px;">
         <button type="button" @click="mobileOpenSub = (mobileOpenSub === 'student' ? null : 'student')" style="width:100%; display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-radius:8px; font-size:0.88rem; font-weight:600; color:#374151; background:none; border:none; cursor:pointer; text-align:left;">
           <span>স্টুডেন্ট কর্নার</span>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" :style="mobileOpenSub === 'student' ? 'transform:rotate(180deg)' : ''" style="transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div x-cloak x-show="mobileOpenSub === 'student'" x-collapse style="padding:0 6px 6px 6px;">
-          <a href="<?php echo APP_URL; ?>/dashboard" style="display:block; padding:8px 18px; border-radius:8px; font-size:0.85rem; color:#374151;">শিক্ষার্থী প্রফাইল লগইন</a>
+          <a href="<?php echo APP_URL; ?>/authentication" style="display:block; padding:8px 18px; border-radius:8px; font-size:0.85rem; color:#374151;">শিক্ষার্থী প্রফাইল লগইন</a>
           <a href="<?php echo APP_URL; ?>/admission" style="display:block; padding:8px 18px; border-radius:8px; font-size:0.85rem; color:#374151;">অনলাইন ভর্তি</a>
           <a href="<?php echo APP_URL; ?>/certificates" style="display:block; padding:8px 18px; border-radius:8px; font-size:0.85rem; color:#374151;">Certificates</a>
           <a href="<?php echo APP_URL; ?>/exam_results" style="display:block; padding:8px 18px; border-radius:8px; font-size:0.85rem; color:#374151;">Exam Results</a>
         </div>
       </div>
-
+    <?php endif; ?>
       <div style="margin-top:6px;">
         <button type="button" @click="mobileOpenSub = (mobileOpenSub === 'important' ? null : 'important')" style="width:100%; display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border-radius:8px; font-size:0.88rem; font-weight:600; color:#374151; background:none; border:none; cursor:pointer; text-align:left;">
           <span>গুরুত্বপূর্ণ তথ্য</span>
