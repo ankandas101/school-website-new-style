@@ -309,13 +309,14 @@ include_once 'includes/header.php';
       <div class="pagination">
         <?php if ((int)$page > 1): ?>
           <a href="notices.php?page=<?php echo (int)$page - 1; ?>">← পূর্ববর্তী</a>
-        <?php endif; ?>
-        
+       
         <span>পৃষ্ঠা <?php echo (int)$page; ?></span>
         
+
         <?php if ((int)$total_notices > (int)$page * (int)$per_page): ?>
           <a href="notices.php?page=<?php echo (int)$page + 1; ?>">পরবর্তী →</a>
         <?php endif; ?>
+       <?php endif; ?>  
       </div>
     <?php endif; ?>
   <?php else: ?>
