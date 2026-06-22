@@ -1,0 +1,34 @@
+# Environment variables
+.env
+
+# Assets folders
+assets/images/
+assets/forms/
+assets/notices/
+assets/results/
+assets/routines/
+
+# Root folders
+forms/
+notices/
+results/
+routines/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Composer
+/vendor/
+
+# Node
+node_modules/
