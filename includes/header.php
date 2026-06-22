@@ -86,7 +86,7 @@ $keywords = ($seo_data && !empty($seo_data['meta_keywords'])) ? $seo_data['meta_
                     border:         '#E8ECF3',
                 },
                 fontFamily: {
-                    siliguri: ['Hind Siliguri', 'Noto Sans Bengali', 'sans-serif'],
+                    siliguri: ['Noto Sans Bengali', 'Hind Siliguri', 'sans-serif'],
                 },
             }
         }

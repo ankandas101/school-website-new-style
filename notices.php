@@ -11,7 +11,7 @@ $offset = ($page - 1) * $per_page;
 // Fetch total count
 $total_result = $conn->query('SELECT COUNT(*) as total FROM notices WHERE status=1');
 $total_row = $total_result ? $total_result->fetch_assoc() : ['total' => 0];
-$total_notices = $total_row['total'];
+$total_notices = (int)($total_row['total'] ?? 0);
 
 // Fetch notices for this page
 $sql = 'SELECT * FROM notices WHERE status=1 ORDER BY notice_date IS NULL, notice_date DESC, id DESC LIMIT ? OFFSET ?';
@@ -305,16 +305,16 @@ include_once 'includes/header.php';
       <?php endwhile; ?>
     </div>
     
-    <?php if ($total_notices > (int)$page * (int)$per_page || $page > 1): ?>
+    <?php if ($total_notices > (int)$page * (int)$per_page || (int)$page > 1): ?>
       <div class="pagination">
-        <?php if ($page > 1): ?>
-          <a href="notices.php?page=<?php echo $page - 1; ?>">← পূর্ববর্তী</a>
+        <?php if ((int)$page > 1): ?>
+          <a href="notices.php?page=<?php echo (int)$page - 1; ?>">← পূর্ববর্তী</a>
         <?php endif; ?>
         
-        <span>পৃষ্ঠা <?php echo $page; ?></span>
+        <span>পৃষ্ঠা <?php echo (int)$page; ?></span>
         
-        <?php if ($total_notices > (int)$page * (int)$per_page): ?>
-          <a href="notices.php?page=<?php echo $page + 1; ?>">পরবর্তী →</a>
+        <?php if ((int)$total_notices > (int)$page * (int)$per_page): ?>
+          <a href="notices.php?page=<?php echo (int)$page + 1; ?>">পরবর্তী →</a>
         <?php endif; ?>
       </div>
     <?php endif; ?>
