@@ -5,6 +5,7 @@ require_once __DIR__ . '/includes/classes.php';
 // Pagination setup
 $per_page = 10;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? intval($_GET['page']) : 1;
+$page = (int)$page;
 $offset = ($page - 1) * $per_page;
 
 // Fetch total count

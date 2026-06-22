@@ -7,9 +7,9 @@ $banner = '';
 $updated_at = '';
 $result = $conn->query("SELECT * FROM admission_info LIMIT 1");
 if ($result && $row = $result->fetch_assoc()) {
-  $requirements = $row['requirements'];
-  $banner = $row['banner'];
-  $updated_at = $row['updated_at'];
+  $requirements = $row['requirements'] ?? '';
+  $banner = $row['banner'] ?? '';
+  $updated_at = $row['updated_at'] ?? '';
 }
 
 include 'includes/header.php';
