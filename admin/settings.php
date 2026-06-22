@@ -280,7 +280,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_school'])) {
     $mpo_code = trim($_POST['mpo_code'] ?? '');
     $school_code = trim($_POST['school_code'] ?? '');
     $logo = $banner = null;
-    $google_map = $_POST['google_map'] ?? '';
+    $google_map = $school_info['google_map'] ?? '';
     $max_size = 2 * 1024 * 1024; // 2MB
     if (isset($_FILES['logo']) && $_FILES['logo']['error'] === UPLOAD_ERR_OK) {
         $ext = strtolower(pathinfo($_FILES['logo']['name'], PATHINFO_EXTENSION));
