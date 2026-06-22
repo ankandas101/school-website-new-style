@@ -346,7 +346,7 @@ button { font-family: inherit; cursor: pointer; }
   margin-bottom: var(--spacing-md);
   text-shadow: 0 2px 8px rgba(0,0,0,0.25);
   font-size: 2.8rem;
-  max-width: 480px;
+  max-width: 800px;
 }
 
 .hero-text p {
