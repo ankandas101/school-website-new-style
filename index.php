@@ -485,17 +485,18 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
       <?php endif; ?>
       <!-- ===== END TEACHERS ===== -->
 
-      <!-- ===== STUDENTS ACHIEVEMENTS ===== -->
+      <!-- ===== OUR STUDENTS ACHIEVEMENTS ===== -->
       <section style="margin:1.75rem 0;" data-aos="fade-up">
-        <div class="about-card" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; align-items:start;">
+        <div class="about-card">
+          <div class="section-header">
+            <h2 class="section-title">আমাদের শিক্ষার্থীদের অর্জন</h2>
+            <a href="student_of_the_year.php" class="section-link">সব দেখুন <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; align-items:stretch;">
 
           <!-- LEFT: Students of the Year -->
           <?php if (!empty($students_arr)): ?>
           <div class="student-section">
-            <div class="section-header">
-              <h2 class="section-title">আমাদের শিক্ষার্থীদের অর্জন</h2>
-              <a href="student_of_the_year.php" class="section-link">সব দেখুন <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
-            </div>
             <div class="committee-members-grid" style="grid-template-columns:repeat(3,1fr);">
               <?php
               $student_display_count = 0;
@@ -533,10 +534,24 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
           <!-- RIGHT: Student Achievements -->
           <?php if ($achievements_result && $achievements_result->num_rows > 0): ?>
           <div class="achievement-section">
-            <div class="section-header">
             <div style="display:flex; flex-direction:column; gap:10px;">
-              <?php while ($achievement = $achievements_result->fetch_assoc()): ?>
+              <?php 
+              $achievement_index = 0;
+              $hardcoded_icons = ['fa-award', 'fa-trophy', 'fa-medal'];
+              while ($achievement = $achievements_result->fetch_assoc()): 
+                $icon_class = $hardcoded_icons[$achievement_index % count($hardcoded_icons)];
+                $achievement_index++;
+              ?>
               <div style="display:flex; gap:10px; align-items:flex-start; padding:8px 10px; border-radius:10px; background:#f8fafc; border:1px solid #e2e8f0;">
+                <div style="flex-shrink:0; width:32px; height:32px; border-radius:8px; background:#f59e0b15; color:#f59e0b; display:flex; align-items:center; justify-content:center; font-size:0.9rem;">
+                  <?php if ($icon_class === 'fa-award'): ?>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15l-2 5 3.5-3.5L7 17l5-5 5 5-3.5 3.5z"/><circle cx="12" cy="8" r="6"/></svg>
+                  <?php elseif ($icon_class === 'fa-trophy'): ?>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+                  <?php else: ?>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2"/><path d="M9 3l3 2 3-2"/></svg>
+                  <?php endif; ?>
+                </div>
                 <div style="flex:1; min-width:0;">
                   <div style="font-size:0.83rem; font-weight:600; color:#123B6A; line-height:1.4; margin-bottom:2px;">
                     <?php echo htmlspecialchars($achievement['title']); ?>
@@ -550,6 +565,7 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
             </div>
           </div>
           <?php endif; ?>
+          </div>
         </div>
       </section>
       <!-- ===== END STUDENTS ===== -->
