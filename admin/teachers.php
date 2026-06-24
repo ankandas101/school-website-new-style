@@ -167,12 +167,12 @@ $teachers = $teacher->getAll();
               </div>
               <div class="modal-body">
                 <div class="mb-3">
-                  <label for="name" class="form-label">Name</label>
-                  <input type="text" class="form-control" id="name" name="name" required />
+                  <label for="name" class="form-label">Name *</label>
+                  <input type="text" class="form-control" id="name" name="name" placeholder="Teacher Name" required />
                 </div>
                 <div class="mb-3">
-                  <label for="designation" class="form-label">Designation</label>
-                  <input type="text" class="form-control" id="designation" name="designation" />
+                  <label for="designation" class="form-label">Designation *</label>
+                  <input type="text" class="form-control" id="designation" name="designation" placeholder="Assistent Teacher" required/>
                 </div>
                 <div class="mb-3">
                   <label for="photo" class="form-label">Photo (JPG/PNG/WebP, max 500KB) - Optional</label>
@@ -194,7 +194,7 @@ $teachers = $teacher->getAll();
                 </div>
                 <div class="mb-3">
                   <label for="bio" class="form-label">Bio / Details:</label>
-                  <textarea class="form-control" id="bio" name="bio" rows="3" placeholder="Enter details about the teacher"></textarea>
+                  <textarea class="form-control" id="bio" name="bio" rows="3" placeholder="Enter details such as his expriences"></textarea>
                 </div>
                 <div class="mb-3">
                   <label for="status" class="form-label">Status</label>

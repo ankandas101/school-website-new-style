@@ -19,7 +19,6 @@ class DashboardStats {
     private $conn;
     public function __construct($conn) { $this->conn = $conn; }
     public function count($table) {
-        // নিশ্চিত করুন $table কে ডাইনামিক না করেন, নাহলে SQL Injection ঝুঁকি আছে
         $allowedTables = [
             'notices', 'teachers', 'videos', 'important_links', 
             'contact_messages', 'student_of_the_year', 'forms'
@@ -56,7 +55,8 @@ $contact_messages = $stats->count('contact_messages');
 $students_of_year = $stats->count('student_of_the_year');
 $forms_count = $stats->count('forms');
 
-
+$complaints_count_result = $conn->query('SELECT COUNT(*) as total FROM complaints');
+$complaints_count = ($complaints_count_result && $row = $complaints_count_result->fetch_assoc()) ? $row['total'] : 0;
 
 //Calculate student totals
 $total_students = $total_male = $total_female = 0;
@@ -85,6 +85,37 @@ class SchoolInfo {
 }
 $schoolInfoObj = new SchoolInfo($conn);
 $school_info = $schoolInfoObj->get();
+
+
+// license_info varified
+class license_info {
+    private $conn;
+
+    public function __construct($conn) {
+        $this->conn = $conn;
+    }
+
+    public function get() {
+        $sql = "SELECT * FROM license_info WHERE id=1";
+        $result = $this->conn->query($sql);
+        return $result->fetch_assoc();
+    }
+}
+$licenseInfoObj = new license_info($conn);
+$license_info = $licenseInfoObj->get();
+
+$domain = strtolower(str_replace('www.', '', $_SERVER['HTTP_HOST']));
+$key = env('LICENSE_SECRET');
+$stored =  $license_info['LICENSE_KEY'];
+//$stored = env('LICENSE_KEY');
+$method = "AES-256-CBC";
+$iv = substr(hash('sha256', $key), 0, 16);
+$decrypted = openssl_decrypt(base64_decode($stored), $method, $key, 0, $iv);
+if ($decrypted !== $domain) {
+    http_response_code(403);
+    die("License Invalid, please call: 01745009934");
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -247,7 +278,7 @@ $school_info = $schoolInfoObj->get();
                         </div>
                     </div>
                 </div>
-
+<!-- 
                 <div class="col-md-3 col-12">
                     <div class="card dashboard-card text-center">
                         <div class="card-body">
@@ -257,16 +288,18 @@ $school_info = $schoolInfoObj->get();
                         </div>
                     </div>
                 </div>
-
+-->
                 <div class="col-md-3 col-12">
                     <div class="card dashboard-card text-center">
                         <div class="card-body">
-                            <h5 class="card-title">Events/Blog</h5>
-                            <p class="display-6 fw-bold text-primary"><?= $events_count ?></p>
-                            <a href="events.php" class="btn btn-primary w-100">Manage Events</a>
+                            <h5 class="card-title">Total Complaints</h5>
+                            <p class="display-6 fw-bold text-primary"><?= $complaints_count ?></p>
+                            <a href="complaint_management.php" class="btn btn-primary w-100">Manage Complaints</a>
                         </div>
                     </div>
                 </div>
+
+
 <!-- 
                 <div class="col-md-3 col-12">
                     <div class="card dashboard-card text-center">
@@ -277,7 +310,7 @@ $school_info = $schoolInfoObj->get();
                         </div>
                     </div>
                 </div>
--->
+
                 <div class="col-md-3 col-12">
                     <div class="card dashboard-card text-center">
                         <div class="card-body">
@@ -298,11 +331,14 @@ $school_info = $schoolInfoObj->get();
                     </div>
                 </div>
             </div>
-
+-->
             <!-- Quick Links Row (optional) -->
             <div class="row g-3 mt-4">
                 <div class="col-md-2 col-6">
-                    <a href="slider.php" class="btn btn-outline-primary w-100 py-3">Slider</a>
+                    <a href="contact_messages.php" class="btn btn-outline-success w-100 py-3">Contact Messages</a>
+                </div>
+                <div class="col-md-2 col-6">
+                    <a href="complaint_management.php" class="btn btn-outline-danger w-100 py-3">Complaints</a>
                 </div>
                 <div class="col-md-2 col-6">
                     <a href="messages.php" class="btn btn-outline-success w-100 py-3">Messages</a>

@@ -228,6 +228,7 @@ $showSoftwareLogin = strtolower((string)env('SYSTEM_SOFTWARE', 'false')) === 'tr
       <?php endif; ?>
       <li class="nav-item"><a class="nav-link <?= $currentPage === 'notices.php' ? 'active' : '' ?>" href="notices.php"><i class="bi bi-megaphone"></i> Notices</a></li>
       <li class="nav-item"><a class="nav-link <?= $currentPage === 'slider.php' ? 'active' : '' ?>" href="slider.php"><i class="bi bi-sliders"></i> Slider</a></li>
+      <li class="nav-item"><a class="nav-link <?= $currentPage === 'complaint_management.php' ? 'active' : '' ?>" href="complaint_management.php"><i class="bi bi-exclamation-triangle"></i> Complaint Manage</a></li>
       <li class="nav-item"><a class="nav-link <?= $currentPage === 'teachers.php' ? 'active' : '' ?>" href="teachers.php"><i class="bi bi-person-badge"></i> Teachers</a></li>
       <li class="nav-item"><a class="nav-link <?= $currentPage === 'management_committee_admin.php' ? 'active' : '' ?>" href="management_committee_admin.php"><i class="bi bi-people-fill"></i> Committee Info</a></li>
       <li class="nav-item"><a class="nav-link <?= $currentPage === 'student_info.php' ? 'active' : '' ?>" href="student_info.php"><i class="bi bi-people"></i> Student Info</a></li>
@@ -247,7 +248,6 @@ $showSoftwareLogin = strtolower((string)env('SYSTEM_SOFTWARE', 'false')) === 'tr
   </div>
 </nav>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     var toggle = document.getElementById('sidebarToggle');

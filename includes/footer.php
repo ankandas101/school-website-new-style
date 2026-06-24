@@ -5,6 +5,15 @@ $school = new SchoolInfo($conn);
 $footer = new FooterInfo($conn);
 $school_info = $school->get();
 $footer_info = $footer->get();
+
+
+
+
+
+// license_info varified
+
+
+
 ?>
     <!-- ===== SITE FOOTER ===== -->
     <footer class="site-footer" role="contentinfo">
@@ -105,9 +114,9 @@ $footer_info = $footer->get();
                         <span>EIIN: <?php echo htmlspecialchars($school_info['eiin']); ?></span>
                     </div>
                     <?php endif; ?>
-                    <a href="contact.php" class="btn-primary-modern" style="margin-top:1rem; font-size:0.8rem; padding:0.5rem 1.1rem;">
+                    <a href="complaint.php" class="btn-primary-modern" style="margin-top:1rem; font-size:0.8rem; padding:0.5rem 1.1rem;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                        যোগাযোগ করুন
+                        অভিযোগ জানান
                     </a>
                 </div>
 

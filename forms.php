@@ -7,7 +7,6 @@ $result = $conn->query($sql);
 
 $page_title = 'গুরুত্বপূর্ণ ডকুমেন্টস সমুহ';
 $page_desc = 'স্কুলের সকল ডকুমেন্ট বা ফর্ম ডাউনলোড করুন।';
-
 include_once 'includes/header.php';
 ?>
 <style>

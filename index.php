@@ -49,6 +49,9 @@ $committee_result = $conn->query('SELECT full_name, title, image FROM management
 // Fetch students of the year
 $students_of_year_result = $conn->query('SELECT name, class, photo, status, year FROM student_of_the_year WHERE status=1 ORDER BY year DESC, id DESC LIMIT 6');
 
+// Fetch student achievements
+$achievements_result = $conn->query('SELECT * FROM student_achievements ORDER BY sort_order ASC');
+
 // Fetch latest 3 forms for sidebar
 $latest_forms_result = $conn->query('SELECT title, id, file FROM forms WHERE status=1 ORDER BY id DESC LIMIT 3');
 
@@ -482,47 +485,78 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
       <?php endif; ?>
       <!-- ===== END TEACHERS ===== -->
 
-      <!-- ===== STUDENTS OF THE YEAR (ACHIEVEMENTS) ===== -->
-      <?php if (!empty($students_arr)): ?>
+      <!-- ===== STUDENTS ACHIEVEMENTS ===== -->
       <section style="margin:1.75rem 0;" data-aos="fade-up">
-        <div class="about-card">
-          <div class="section-header">
-            <h2 class="section-title">কৃতি শিক্ষার্থী</h2>
-            <a href="student_of_the_year.php" class="section-link">সব দেখুন <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
-          </div>
-          <div class="swiper teachers-swiper" id="studentsSwiper">
-            <div class="swiper-wrapper">
-              <?php foreach ($students_arr as $student): ?>
-              <div class="swiper-slide">
-                <div class="teacher-card">
-                  <?php if (!empty($student['photo'])): ?>
-                    <img src="assets/images/<?php echo htmlspecialchars($student['photo']); ?>" alt="<?php echo htmlspecialchars($student['name']); ?>" class="teacher-avatar" loading="lazy" decoding="async">
-                  <?php else: ?>
-                    <div class="teacher-avatar" style="background:#fff7ed; display:flex; align-items:center; justify-content:center; border:3px solid #E8ECF3;">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    </div>
-                  <?php endif; ?>
-                  <div class="teacher-name"><?php echo htmlspecialchars($student['name']); ?></div>
-                  <div class="teacher-designation">শ্রেণি: <?php echo htmlspecialchars($student['class']); ?></div>
-                  <div class="teacher-contact" style="margin-top:4px; justify-content:center;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <div class="about-card" style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; align-items:start;">
+
+          <!-- LEFT: Students of the Year -->
+          <?php if (!empty($students_arr)): ?>
+          <div class="student-section">
+            <div class="section-header">
+              <h2 class="section-title">আমাদের শিক্ষার্থীদের অর্জন</h2>
+              <a href="student_of_the_year.php" class="section-link">সব দেখুন <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></a>
+            </div>
+            <div class="committee-members-grid" style="grid-template-columns:repeat(3,1fr);">
+              <?php
+              $student_display_count = 0;
+              foreach ($students_arr as $student):
+                if ($student_display_count >= 3) break;
+                $student_display_count++;
+              ?>
+              <a href="student_of_the_year.php" class="committee-member-card">
+                <?php if (!empty($student['photo'])): ?>
+                  <img src="assets/images/<?php echo htmlspecialchars($student['photo']); ?>" alt="<?php echo htmlspecialchars($student['name']); ?>" class="member-avatar" loading="lazy" decoding="async">
+                <?php else: ?>
+                  <div class="member-avatar" style="background:#fff7ed; display:flex; align-items:center; justify-content:center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  </div>
+                <?php endif; ?>
+                <div class="member-info">
+                  <div class="member-name"><?php echo htmlspecialchars($student['name']); ?></div>
+                  <div class="member-designation">শ্রেণি: <?php echo htmlspecialchars($student['class']); ?></div>
+                  <div style="font-size:0.7rem; color:#94a3b8; margin-top:2px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" style="vertical-align:middle;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                     বছর: <?php echo htmlspecialchars($student['year']); ?>
                   </div>
                 </div>
-              </div>
+                <div class="member-arrow">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"/>
+                  </svg>
+                </div>
+              </a>
               <?php endforeach; ?>
             </div>
-            <div class="swiper-button-prev students-prev"></div>
-            <div class="swiper-button-next students-next"></div>
           </div>
+          <?php endif; ?>
+
+          <!-- RIGHT: Student Achievements -->
+          <?php if ($achievements_result && $achievements_result->num_rows > 0): ?>
+          <div class="achievement-section">
+            <div class="section-header">
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <?php while ($achievement = $achievements_result->fetch_assoc()): ?>
+              <div style="display:flex; gap:10px; align-items:flex-start; padding:8px 10px; border-radius:10px; background:#f8fafc; border:1px solid #e2e8f0;">
+                <div style="flex:1; min-width:0;">
+                  <div style="font-size:0.83rem; font-weight:600; color:#123B6A; line-height:1.4; margin-bottom:2px;">
+                    <?php echo htmlspecialchars($achievement['title']); ?>
+                  </div>
+                  <div style="font-size:0.75rem; color:#64748b; line-height:1.4;">
+                    <?php echo htmlspecialchars($achievement['subtitle']); ?>
+                  </div>
+                </div>
+              </div>
+              <?php endwhile; ?>
+            </div>
+          </div>
+          <?php endif; ?>
         </div>
       </section>
-      <?php endif; ?>
       <!-- ===== END STUDENTS ===== -->
 
       <!-- ===== PHOTO GALLERY + VIDEO GALLERY (SAME ROW) ===== -->
       <section style="margin:1.75rem 0;" data-aos="fade-up">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; align-items:start;">
+        <div class="photo-video-grid" style="display:grid; grid-template-columns:1fr; gap:1.25rem; align-items:start;">
 
           <!-- LEFT: Photo Gallery -->
           <div class="about-card" style="padding:1.25rem;">
@@ -616,7 +650,7 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
               <?php endif; ?>
             </div>
             <div style="text-align:center; margin-top:1rem;">
-              <a href="video_gallery.php" class="btn-primary-modern" style="font-size:0.82rem; padding:0.45rem 1.1rem;">আরও ভিডিও দেখুন</a>
+              <a href="video_gallery.php" class="btn-primary-modern">আরও ভিডিও দেখুন</a>
             </div>
           </div>
 
@@ -893,6 +927,9 @@ if ($students_of_year_result && $students_of_year_result->num_rows > 0) {
   @media (max-width: 1023px) {
     aside { display: block !important; width: 100% !important; }
     main > div { flex-direction: column !important; }
+  }
+  @media (min-width: 1024px) {
+    .photo-video-grid { grid-template-columns: 1.5fr 1fr !important; }
   }
   @media (max-width: 639px) {
     .gallery-grid { grid-template-columns: repeat(2,1fr) !important; }

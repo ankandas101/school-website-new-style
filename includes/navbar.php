@@ -55,6 +55,7 @@
           <a href="result.php" class="dropdown-item">ফলাফল</a>
           <a href="result_archives.php" class="dropdown-item">ফলাফল আর্কাইভ</a>
           <a href="management_committee.php" class="dropdown-item">ব্যবস্থাপনা কমিটি</a>
+          <a href="complaint.php" class="dropdown-item">অভিযোগ জানান</a>
           <a href="admission.php" class="dropdown-item">ভর্তি তথ্য</a>
         </div>
       </div>
@@ -125,6 +126,7 @@
           <a href="result.php" style="display:block; padding:8px 18px; border-radius:8px; font-size:0.85rem; color:#374151;">ফলাফল</a>
           <a href="result_archives.php" style="display:block; padding:8px 18px; border-radius:8px; font-size:0.85rem; color:#374151;">ফলাফল আর্কাইভ</a>
           <a href="management_committee.php" style="display:block; padding:8px 18px; border-radius:8px; font-size:0.85rem; color:#374151;">ব্যবস্থাপনা কমিটি</a>
+          <a href="complaint.php" style="display:block; padding:8px 18px; border-radius:8px; font-size:0.85rem; color:#374151;">অভিযোগ জানান</a>
           <a href="admission.php" style="display:block; padding:8px 18px; border-radius:8px; font-size:0.85rem; color:#374151;">ভর্তি তথ্য</a>
         </div>
       </div>
