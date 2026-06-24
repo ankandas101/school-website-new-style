@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 21, 2026 at 12:29 PM
+-- Generation Time: Jun 24, 2026 at 07:39 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -67,7 +67,8 @@ CREATE TABLE `admins` (
 --
 
 INSERT INTO `admins` (`id`, `username`, `password`, `name`, `email`, `is_superadmin`, `created_at`) VALUES
-(2, 'ankandas', '$2y$10$AX3o45F7qu1PuiTH9Poft.ouISFCnmLxEJGil81hZWO243rKloBa2', 'Ankan Das', 'ankan.cse22@gmail.com', 1, '2025-07-18 08:52:08');
+(2, 'ankandas', '$2y$10$AX3o45F7qu1PuiTH9Poft.ouISFCnmLxEJGil81hZWO243rKloBa2', 'Ankan Das', 'ankan.cse22@gmail.com', 1, '2025-07-18 08:52:08'),
+(5, 'testuser', '$2y$10$Jy6m36p.en2n1AQkz7inpeQpIMss7.O7WTjNH6TYmxYwvJDISscBy', 'testuser', 'testuser@gmail.com', 0, '2026-06-21 16:04:39');
 
 -- --------------------------------------------------------
 
@@ -88,6 +89,28 @@ CREATE TABLE `admission_info` (
 
 INSERT INTO `admission_info` (`id`, `requirements`, `banner`, `updated_at`) VALUES
 (1, 'Here\'s a sample admission instruction for the madrasha:\r\n\r\n**Admission Instructions**\r\n\r\nWelcome!  This section provides essential information for prospective students.  Please review the following requirements: [List key requirements here - e.g., age limit, required documents, application process].  We look forward to welcoming new students.', 'assets/images/admission_banner_1757334444_959.png', '2025-09-10 20:37:34');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `complaints`
+--
+
+CREATE TABLE `complaints` (
+  `id` int(11) NOT NULL,
+  `complaint_id` varchar(20) NOT NULL,
+  `student_name` varchar(255) NOT NULL,
+  `class_name` varchar(100) NOT NULL,
+  `roll_number` varchar(50) DEFAULT NULL,
+  `phone` varchar(20) NOT NULL,
+  `complaint_type` varchar(100) NOT NULL,
+  `incident_date` date DEFAULT NULL,
+  `complaint_details` text NOT NULL,
+  `anonymous` tinyint(1) DEFAULT 0,
+  `attachment` varchar(255) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -260,22 +283,24 @@ CREATE TABLE `license_info` (
   `id` int(11) NOT NULL DEFAULT 1,
   `license_to` text DEFAULT NULL,
   `license_date` date DEFAULT NULL,
-  `license_domain` varchar(255) DEFAULT NULL,
+  `license_domain` varchar(255) NOT NULL DEFAULT 'localhost',
   `license_type` varchar(100) DEFAULT 'Single Domain',
   `license_expiry_date` date DEFAULT NULL,
   `company_name` varchar(255) DEFAULT NULL,
   `company_address` varchar(255) DEFAULT NULL,
   `support_line` varchar(50) DEFAULT NULL,
   `facebook` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL
+  `email` varchar(255) DEFAULT NULL,
+  `license_status` text DEFAULT NULL,
+  `LICENSE_KEY` text NOT NULL DEFAULT 'RFRSdVBUZ00zWHdLbENvdWhvTW83dz09'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `license_info`
 --
 
-INSERT INTO `license_info` (`id`, `license_to`, `license_date`, `license_domain`, `license_type`, `license_expiry_date`, `company_name`, `company_address`, `support_line`, `facebook`, `email`) VALUES
-(1, 'Kamal Kanti Secondary School ', '2025-08-08', 'kamalkatisecondaryschool.edu.bd\n', 'Single Domain', '2025-08-08', 'KhulnaDevs', '29, Sonadanga, Khulna', '01745009934', 'https://www.facebook.com/ankandas.fb', 'info@khlnadevs.com');
+INSERT INTO `license_info` (`id`, `license_to`, `license_date`, `license_domain`, `license_type`, `license_expiry_date`, `company_name`, `company_address`, `support_line`, `facebook`, `email`, `license_status`, `LICENSE_KEY`) VALUES
+(1, 'Kamal Kanti Secondary School ', '2025-08-08', 'kamalkatisecondaryschool.edu.bd\n', 'Single Domain', '2025-08-08', 'KhulnaDevs', '29, Sonadanga, Khulna', '01745009934', 'https://www.facebook.com/ankandas.fb', 'info@khlnadevs.com', NULL, 'RFRSdVBUZ00zWHdLbENvdWhvTW83dz09');
 
 -- --------------------------------------------------------
 
@@ -300,17 +325,33 @@ CREATE TABLE `management_committee` (
 --
 
 INSERT INTO `management_committee` (`id`, `full_name`, `title`, `image`, `contact_number`, `joining_date`, `sort_order`, `created_at`, `updated_at`) VALUES
-(19, 'Mohammad ali', 'Parents', 'default.png', '01700000000', '2025-08-01', 100, '2025-08-28 00:16:38', '2025-08-28 00:16:38'),
-(20, 'A.K.M JAMSHER ALI', 'Member Secretary', 'default.png', '01700000000', '2025-08-28', 100, '2025-08-28 00:17:12', '2025-08-28 00:17:12'),
-(21, 'MD.JAHANGIR ALAM', 'Teacher Representative', 'default.png', '01700000000', '2025-08-01', 100, '2025-08-28 00:17:42', '2025-08-28 00:17:42'),
-(22, 'Md. Abdul Karim', 'President', 'default.png', '01711111111', '2022-01-15', 1, '2026-06-20 16:19:03', '2026-06-20 16:19:03'),
-(23, 'Mrs. Shahana Akter', 'Vice President', 'default.png', '01822222222', '2022-02-10', 2, '2026-06-20 16:19:03', '2026-06-20 16:19:03'),
-(24, 'Md. Nazrul Islam', 'General Secretary', 'default.png', '01933333333', '2021-11-20', 3, '2026-06-20 16:19:03', '2026-06-20 16:19:03'),
-(25, 'Mohammad Saiful Alam', 'Treasurer', 'default.png', '01644444444', '2023-03-05', 4, '2026-06-20 16:19:03', '2026-06-20 16:19:03'),
-(26, 'Mrs. Farzana Rahman', 'Member', 'default.png', '01555555555', '2023-06-18', 5, '2026-06-20 16:19:03', '2026-06-20 16:19:03'),
-(27, 'Md. Jahangir Hossain', 'Member', 'default.png', '01766666666', '2022-09-12', 6, '2026-06-20 16:19:03', '2026-06-20 16:19:03'),
-(28, 'Anwara Begum', 'Guardian Representative', 'default.png', '01877777777', '2024-01-08', 7, '2026-06-20 16:19:03', '2026-06-20 16:19:03'),
-(29, 'Md. Rezaul Karim', 'Teacher Representative', 'default.png', '01988888888', '2021-08-25', 8, '2026-06-20 16:19:03', '2026-06-20 16:19:03');
+(30, 'KRISHAN ROY', 'President', 'default.png', '', '2024-07-21', 1, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(31, 'MD.MOKSED SARDER', 'Education', 'default.png', '01728014625', NULL, 2, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(32, 'MD. PROSAD MONDAL', 'Parents', 'default.png', '', NULL, 3, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(33, 'Md.SANTOSH BACHER', 'Parents', 'default.png', '', NULL, 4, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(34, 'Md.MASUM IQBAL', 'Parents', 'default.png', '', NULL, 5, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(35, 'JOYSNA MONDAL', 'Parents', 'default.png', '', NULL, 6, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(36, 'Baburam Sarker', 'Donor', 'default.png', '', NULL, 7, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(37, 'MD.MOHANANDA SARKER', 'Parents', 'default.png', '', NULL, 8, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(38, 'MD.SANJOY KUMAR DAS', 'President', 'default.png', '01761853505', NULL, 9, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(39, 'Kunu Pada Bachhar', 'Member Secretary', 'default.png', '01715267739', NULL, 10, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(40, 'MD. RADHA KANTA SARKAR', 'Teacher Representative', 'default.png', '01720590281', NULL, 11, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(41, 'Md.ASIT BARAN DHALI', 'Teacher Representative', 'default.png', '01751750886', NULL, 12, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(42, 'Shova Mondal', 'Teacher Representative', 'default.png', '01916758787', NULL, 13, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(43, 'KRISHNA PADA MONDAL', 'Member Secretary', 'default.png', '01309118559', '2022-06-07', 14, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(44, 'MD. ABDUR RASHED', 'Member Secretary', 'default.png', '', '2024-07-21', 15, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(45, 'PALASH KUMAR MONDAL', 'Teacher Representative', 'default.png', '01712336152', '2022-06-07', 16, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(46, 'MD ABDUL MANNAN', 'Teacher Representative', 'default.png', '01718848715', '2022-06-07', 17, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(47, 'SHOVA MONDAL', 'Teacher Representative', 'default.png', '01916758787', '2022-06-07', 18, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(48, 'PROSANTA KUMAR BACHAR', 'Teacher Representative', 'default.png', '', '2024-07-21', 19, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(49, 'MD AKBAR ALI SARDAR', 'Parents', 'default.png', '01728243291', '2022-06-07', 20, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(50, 'SANJOY KUMAR DAS', 'President', 'default.png', '01712096096', '2022-06-07', 21, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(51, 'BABURAM SARDAR', 'Donor', 'default.png', '01720687435', '2022-06-07', 22, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(52, 'MONAJIT MONDAL', 'Parents', 'default.png', '01740944570', '2022-06-07', 23, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(53, 'THAKURDASH SARKER', 'Parents', 'default.png', '01710123326', '2022-06-07', 24, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(54, 'MD SHAHEDUL ISLAM', 'Parents', 'default.png', '01718829673', '2022-06-07', 25, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(55, 'DIPANKAR KUMAR BACHHAR', 'Parents', 'default.png', '', '2024-07-21', 26, '2026-06-22 19:53:12', '2026-06-22 19:53:12'),
+(56, 'BEGAM KHATUN', 'Reserved Female Guardian Member', 'default.png', '01762098835', '2022-06-07', 27, '2026-06-22 19:53:12', '2026-06-22 19:53:12');
 
 -- --------------------------------------------------------
 
@@ -334,7 +375,7 @@ CREATE TABLE `messages` (
 INSERT INTO `messages` (`id`, `type`, `name`, `photo`, `message`, `updated_at`) VALUES
 (12, 'head_teacher', 'A.K.M. Jamser Ali', 'head_teacher_1756319822_342.png', 'বর্তমান যুগে সঠিক শিক্ষা ছাড়া কোনো জাতি অগ্রসর হতে পারে না। হাতীবান্ধা আলিম মাদ্রাসা শিক্ষার্থীদের জন্য কেবল ধর্মীয় জ্ঞান নয়, আধুনিক জ্ঞান-বিজ্ঞান ও প্রযুক্তিগত দক্ষতা অর্জনের ক্ষেত্রও তৈরি করছে। আমাদের লক্ষ্য হচ্ছে শিক্ষার্থীদেরকে আলোকিত মানুষ হিসেবে গড়ে তোলা, যাতে তারা সমাজ, দেশ ও জাতির কল্যাণে অবদান রাখতে পারে।', '2025-08-27 18:37:02'),
 (13, 'chairman', 'Md. Rezaul Karim', 'chairman_1756319756_231.jpg', 'হাতীবান্ধা আলিম মাদ্রাসা প্রতিষ্ঠার মূল উদ্দেশ্য ছিল শিক্ষার্থীদের মধ্যে ইসলামী শিক্ষার আলো ছড়িয়ে দেওয়া এবং নৈতিক, সামাজিক ও আধুনিক জ্ঞানচর্চায় তাদের দক্ষ করে গড়ে তোলা। প্রতিষ্ঠার শুরু থেকে আজ অবধি মাদ্রাসাটি এ লক্ষ্যে নিরলসভাবে কাজ করে যাচ্ছে, যা নিঃসন্দেহে আনন্দের বিষয়।', '2025-08-27 18:35:56'),
-(14, 'about_school', '', 'about_banner_1756319694_861.png', 'হাতীবান্ধা আলিম মাদ্রাসা, উপজেলা হাতীবান্ধা, জেলা লালমনিরহাট একটি অগ্রণী ধর্মীয় ও সাধারণ শিক্ষাপ্রতিষ্ঠান। প্রতিষ্ঠার পর থেকে মাদ্রাসাটি ইসলামী শিক্ষার প্রসার, চারিত্রিক গুণাবলির বিকাশ এবং আধুনিক জ্ঞানচর্চার মাধ্যমে শিক্ষার্থীদের আলোকিত ও আদর্শ স্কুল', '2025-09-02 11:12:16');
+(14, 'about_school', '', 'about_banner_1756319694_861.png', 'হাতীবান্ধা আলিম মাদ্রাসা, উপজেলা হাতীবান্ধা, জেলা লালমনিরহাট একটি অগ্রণী ধর্মীয় ও সাধারণ শিক্ষাপ্রতিষ্ঠান। প্রতিষ্ঠার পর থেকে মাদ্রাসাটি ইসলামী শিক্ষার প্রসার, চারিত্রিক গুণাবলির বিকাশ এবং আধুনিক জ্ঞানচর্চার মাধ্যমে শিক্ষার্থীদের আলোকিত ও আদর্শ স্কুল আমাদের লক্ষ্য হচ্ছে শিক্ষার্থীদেরকে আলোকিত মানুষ হিসেবে গড়ে তোলা, যাতে তারা সমাজ, দেশ ও জাতির কল্যাণে অবদান রাখতে পারে।', '2026-06-21 17:03:06');
 
 -- --------------------------------------------------------
 
@@ -377,7 +418,6 @@ CREATE TABLE `notices` (
 --
 
 INSERT INTO `notices` (`id`, `title`, `description`, `notice_date`, `status`, `created_at`, `show_in_ticker`, `attachment`) VALUES
-(10, 'নতুন ওয়েবসাইট এখন সম্পূর্ণরূপে চালু হয়েছে।', 'আমরা আনন্দের সাথে জানাচ্ছি যে হাতীবান্ধা আলিম মাদ্রাসার নতুন ওয়েবসাইট এখন সম্পূর্ণরূপে চালু হয়েছে।\r\nওয়েবসাইটের মাধ্যমে আপনি আমাদের মাদ্রাসার বিভিন্ন কার্যক্রম, শিক্ষাক্রম, ভর্তি সংক্রান্ত তথ্য এবং শিক্ষক-বৃত্তান্ত সহজেই জানতে পারবেন।\r\nসদা আমাদের ওয়েবসাইট ভিজিট করুন এবং শিক্ষাগত তথ্যের সর্বশেষ আপডেট পেতে থাকুন।', '2025-08-27', 1, '2025-08-27 18:43:12', 0, NULL),
 (15, 'বার্ষিক ক্রীড়া প্রতিযোগিতা ২০২৬', 'আগামী সপ্তাহের বুধবার মাদ্রাসার বার্ষিক ক্রীড়া প্রতিযোগিতা অনুষ্ঠিত হতে যাচ্ছে। আগ্রহীদের নাম জমা দেওয়ার অনুরোধ করা হলো।', '2026-01-12', 1, '2026-01-12 04:00:00', 0, 'sports_event_2026.pdf'),
 (16, 'শহীদ দিবস ও আন্তর্জাতিক মাতৃভাষা দিবস উদযাপন', '২১শে ফেব্রুয়ারি মহান শহীদ দিবস উপলক্ষে মাদ্রাসায় আলোচনা সভা ও দোয়া মাহফিলের আয়োজন করা হয়েছে।', '2026-02-18', 1, '2026-02-18 02:30:00', 0, NULL),
 (17, 'পরীক্ষার ফলাফল প্রকাশ (দাখিল নির্বাচনী পরীক্ষা)', '২০২৬ সালের দাখিল নির্বাচনী পরীক্ষার ফলাফল আগামী পরশু দিন দুপুর ১২:০০ টায় মাদ্রাসার নোটিশ বোর্ডে প্রকাশ করা হবে।', '2026-02-25', 1, '2026-02-25 08:10:22', 1, 'dakhil_result_2026.pdf'),
@@ -451,6 +491,13 @@ CREATE TABLE `routines` (
   `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `routines`
+--
+
+INSERT INTO `routines` (`id`, `class_name`, `file_type`, `file_name`, `uploaded_at`) VALUES
+(3, 'Six', 'image', 'routine_1782046476_915.png', '2026-06-21 12:54:36');
+
 -- --------------------------------------------------------
 
 --
@@ -471,10 +518,10 @@ CREATE TABLE `schedules` (
 --
 
 INSERT INTO `schedules` (`id`, `title`, `time_value`, `sort_order`, `status`, `updated_at`) VALUES
-(1, 'ক্লাস শুরু', '০৮:০০ AM', 1, 1, '2026-06-19 09:30:47'),
+(1, 'ক্লাস শুরু', '০৯:০০ AM', 1, 1, '2026-06-22 14:15:51'),
 (2, 'টিফিন বিরতি', '০১:০০ PM - ০২:০০ PM', 2, 1, '2026-06-19 09:30:47'),
 (3, 'ক্লাস শেষ', '০৪:০০ PM', 3, 1, '2026-06-19 09:30:47'),
-(4, 'অফিস সময়', '০৯:০০ AM - ০৫:০০ PM', 4, 1, '2026-06-19 09:30:47');
+(4, 'অফিস সময়', '০৯:০০ AM - ০৪:০০ PM', 4, 1, '2026-06-22 14:16:04');
 
 -- --------------------------------------------------------
 
@@ -504,7 +551,7 @@ CREATE TABLE `school_info` (
 --
 
 INSERT INTO `school_info` (`id`, `school_name`, `logo`, `banner`, `eiin`, `about`, `updated_at`, `established`, `address`, `phone`, `email`, `mpo_code`, `school_code`, `google_map`) VALUES
-(1, 'হাতীবান্ধা আলিম মাদ্রাসা', 'logo_1756316800_176.png', 'banner_1756316800_782.png', '122818', 'হাতীবান্ধা আলিম মাদ্রাসা, উপজেলা হাতীবান্ধা, জেলা লালমনিরহাট একটি অগ্রণী ধর্মীয় ও সাধারণ শিক্ষাপ্রতিষ্ঠান। স্কুলটি  প্রতিষ্ঠার পর থেকে মাদ্রাসাটি ইসলামী শিক্ষার প্রসার, চারিত্রিক গুণাবলির বিকাশ এবং আধুনিক জ্ঞানচর্চার মাধ্যমে শিক্ষার্থীদের আলোকিত ও আদর্শ নাগরিক হিসেবে গড়ে তোলার লক্ষ্যে নিরলসভাবে কাজ করে যাচ্ছে।\nএখানে অভিজ্ঞ ও যোগ্য শিক্ষকমণ্ডলীর তত্ত্বাবধানে শিক্ষার্থীরা কুরআন-হাদিস, আরবি সাহিত্য, ইসলামিক স্টাডিজসহ সাধারণ বিষয়েও শিক্ষা গ্রহণ করে থাকে। একই সাথে আধুনিক তথ্যপ্রযুক্তি ও সমসাময়িক জ্ঞানচর্চার সুযোগ থাকায় শিক্ষার্থীরা নিজেদের যোগ্যতা ও প্রতিভা বিকাশের সুবর্ণ সুযোগ পাচ্ছে।', '2026-06-20 10:07:21', '1979', 'পোস্ট: হাতীবান্ধা-5030, উপজেলা: হাতীবান্ধা, জেলা: লালমনিরহাট', '01309118559', 'hatibandhaalm122818@gmail.com', '8902012202', '1185592', '<div style=\"width: 100%\"><iframe width=\"100%\" height=\"600\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=Hatibandha%20Alim%20Madrasah+(Hatibandha%20Alim%20Madrasah)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed\"><a href=\"https://www.mapsdirections.info/fr/calculer-la-population-sur-une-carte\">mesurer la population sur une carte</a></iframe></div>');
+(1, 'হাতীবান্ধা আলিম মাদ্রাসা', 'logo_1756316800_176.png', 'banner_1756316800_782.png', '122818', 'হাতীবান্ধা আলিম মাদ্রাসা, উপজেলা হাতীবান্ধা, জেলা লালমনিরহাট একটি অগ্রণী ধর্মীয় ও সাধারণ শিক্ষাপ্রতিষ্ঠান। স্কুলটি  প্রতিষ্ঠার পর থেকে মাদ্রাসাটি ইসলামী শিক্ষার প্রসার, চারিত্রিক গুণাবলির বিকাশ এবং আধুনিক জ্ঞানচর্চার মাধ্যমে শিক্ষার্থীদের আলোকিত ও আদর্শ নাগরিক হিসেবে গড়ে তোলার লক্ষ্যে নিরলসভাবে কাজ করে যাচ্ছে।\nএখানে অভিজ্ঞ ও যোগ্য শিক্ষকমণ্ডলীর তত্ত্বাবধানে শিক্ষার্থীরা কুরআন-হাদিস, আরবি সাহিত্য, ইসলামিক স্টাডিজসহ সাধারণ বিষয়েও শিক্ষা গ্রহণ করে থাকে। একই সাথে আধুনিক তথ্যপ্রযুক্তি ও সমসাময়িক জ্ঞানচর্চার সুযোগ থাকায় শিক্ষার্থীরা নিজেদের যোগ্যতা ও প্রতিভা বিকাশের সুবর্ণ সুযোগ পাচ্ছে।', '2026-06-21 19:14:59', '1979', 'পোস্ট: হাতীবান্ধা-5030, উপজেলা: হাতীবান্ধা, জেলা: লালমনিরহাট', '01309118559', 'hatibandhaalm122818@gmail.com', '8902012202', '1185592', '<div style=\"width: 100%\"><iframe width=\"100%\" height=\"200\" frameborder=\"0\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=Hatibandha%20Alim%20Madrasah+(Hatibandha%20Alim%20Madrasah)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed\"><a href=\"https://www.mapsdirections.info/fr/calculer-la-population-sur-une-carte\">mesurer la population sur une carte</a></iframe></div>');
 
 -- --------------------------------------------------------
 
@@ -530,7 +577,7 @@ CREATE TABLE `school_statistics` (
 INSERT INTO `school_statistics` (`id`, `title`, `value`, `suffix`, `sort_order`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'শিক্ষার্থী', '500', '+', 1, 1, '2026-06-20 10:56:06', '2026-06-20 10:59:17'),
 (2, 'শিক্ষক', '20', '+', 2, 1, '2026-06-20 10:56:06', '2026-06-20 10:59:22'),
-(3, 'বছরের ঐতিহ্য', '50', '+', 3, 1, '2026-06-20 10:56:06', '2026-06-20 10:59:27'),
+(3, 'বছরের ঐতিহ্য', '30', '+', 3, 1, '2026-06-20 10:56:06', '2026-06-21 12:55:36'),
 (4, 'পাশের হার', '99', '%', 4, 1, '2026-06-20 10:56:06', '2026-06-20 10:59:31');
 
 -- --------------------------------------------------------
@@ -574,6 +621,13 @@ CREATE TABLE `sidebar_widgets` (
   `status` tinyint(1) DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sidebar_widgets`
+--
+
+INSERT INTO `sidebar_widgets` (`id`, `type`, `title`, `content`, `sort_order`, `status`, `created_at`) VALUES
+(11, 'html', 'Prayer Time', '<iframe src=\"https://timesprayer.com/widgets.php?frame=1&amp;lang=en&amp;name=dhaka\" style=\"border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; overflow: hidden; width: 100%; height: 142px;\"></iframe>', 0, 1, '2026-06-21 19:30:58');
 
 -- --------------------------------------------------------
 
@@ -623,6 +677,29 @@ CREATE TABLE `sliders` (
 INSERT INTO `sliders` (`id`, `image`, `caption_title`, `caption_text`, `sort_order`, `status`, `created_at`) VALUES
 (22, 'slider_1781869155_414.jpg', 'Home Slider', 'Hatibandha Alim Madrasha building', 0, 1, '2026-06-19 11:39:15'),
 (23, 'slider_1781869163_928.jpg', '', '', 0, 1, '2026-06-19 11:39:23');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_achievements`
+--
+
+CREATE TABLE `student_achievements` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `subtitle` varchar(255) NOT NULL,
+  `sort_order` int(11) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `student_achievements`
+--
+
+INSERT INTO `student_achievements` (`id`, `title`, `subtitle`, `sort_order`, `created_at`) VALUES
+(1, 'এসএসসি ২০২৪', '100% পাশের হার', 1, '2026-06-24 04:45:33'),
+(2, 'জিপিএ-৫ প্রাপ্ত', '২০ জন শিক্ষার্থী', 2, '2026-06-24 04:45:33'),
+(3, 'বৃত্তি প্রাপ্ত', '১৫ জন শিক্ষার্থী বৃত্তি পেয়েছে', 3, '2026-06-24 04:45:33');
 
 -- --------------------------------------------------------
 
@@ -696,7 +773,7 @@ CREATE TABLE `teachers` (
 --
 
 INSERT INTO `teachers` (`id`, `name`, `designation`, `bio`, `photo`, `status`, `created_at`, `phone`, `email`, `sort_order`) VALUES
-(10, 'Md. Abdullah Al Mamun', 'Principal', 'Md. Mamun has over 20 years of experience in Islamic education and school administration. He is committed to providing quality education and fostering moral values among students.', 'default.png', 1, '2025-08-27 18:10:09', '01700000000', 'teacher@example.com', 0),
+(10, 'Md. Abdullah Al Mamun', 'Principal', 'Md. Mamun has over 20 years of experience in Islamic education and school administration. He is committed to providing quality education and fostering moral values among students.', 'default.png', 1, '2025-08-27 18:10:09', '017111111111', 'teacher@example.com', 0),
 (11, 'Ayesha Sultana', 'Arabic Department', 'Ayesha Sultana specializes in Arabic language and literature with 15 years of teaching experience. She focuses on developing students\' linguistic and analytical skills.', 'default.png', 1, '2025-08-27 18:11:10', '01775457008', 'teacher@example.com', 0),
 (12, 'Md. Rezaul Karim', 'Senior Islamic Studies Teacher', 'Md. Karim has been teaching Islamic Studies for 18 years. He emphasizes understanding the Quran and Hadith with practical application in daily life.', 'teacher_1756318325_446.jpg', 1, '2025-08-27 18:12:05', '01745008541', 'teacher@example.com', 0),
 (13, 'Md. Jahangir Hossain', 'Mathematics Teacher', 'Md. Hossain has a strong background in mathematics and enjoys making complex concepts easy to understand for students.', 'default.png', 1, '2025-08-27 18:13:23', '01745000000', 'teacher@example.com', 0),
@@ -739,6 +816,12 @@ ALTER TABLE `admins`
 -- Indexes for table `admission_info`
 --
 ALTER TABLE `admission_info`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `complaints`
+--
+ALTER TABLE `complaints`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -876,6 +959,12 @@ ALTER TABLE `sliders`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `student_achievements`
+--
+ALTER TABLE `student_achievements`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `student_info`
 --
 ALTER TABLE `student_info`
@@ -913,12 +1002,18 @@ ALTER TABLE `academic_info_links`
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `admission_info`
 --
 ALTER TABLE `admission_info`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `complaints`
+--
+ALTER TABLE `complaints`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
@@ -961,7 +1056,7 @@ ALTER TABLE `important_links`
 -- AUTO_INCREMENT for table `management_committee`
 --
 ALTER TABLE `management_committee`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `messages`
@@ -997,7 +1092,7 @@ ALTER TABLE `result_archives`
 -- AUTO_INCREMENT for table `routines`
 --
 ALTER TABLE `routines`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `schedules`
@@ -1021,7 +1116,7 @@ ALTER TABLE `seo_settings`
 -- AUTO_INCREMENT for table `sidebar_widgets`
 --
 ALTER TABLE `sidebar_widgets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `site_settings`
@@ -1033,7 +1128,13 @@ ALTER TABLE `site_settings`
 -- AUTO_INCREMENT for table `sliders`
 --
 ALTER TABLE `sliders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- AUTO_INCREMENT for table `student_achievements`
+--
+ALTER TABLE `student_achievements`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `student_info`

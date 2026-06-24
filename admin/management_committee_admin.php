@@ -181,6 +181,7 @@ $members = $committee->getAll();
                             <td>
                                 <?php
                                     $img_file = $row['image'] ? $row['image'] : 'default.png';
+                                    $img_file = $img_file ?? 'default.png';
                                 ?>
                                 <img src="../assets/images/<?php echo htmlspecialchars($img_file); ?>" width="60" class="rounded" alt="member">
                             </td>
