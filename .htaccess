@@ -7,7 +7,7 @@ RewriteEngine On
 # Custom 404 Page
 # ============================================
 ErrorDocument 404 /404.php
-
+ErrorDocument 403 /403.php
 
 # ============================================
 # ALLOW ADMIN PANEL (IMPORTANT)

@@ -5,3 +5,7 @@ Options -Indexes
 # <FilesMatch "\.(php|php5|phtml)$">
 #     Deny from all
 # </FilesMatch> 
+
+RewriteEngine On
+
+RewriteRule ^$ login.php [R=301,L]
