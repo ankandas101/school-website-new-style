@@ -8,7 +8,7 @@ $baseUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "
 $urls = [];
 // Static pages
 $staticPages = [
-    'index.php', 'about.php', 'contact.php', 'admission.php', 'event.php', 'forms.php', 'head_teacher.php', 'chairman.php', 'management_committee.php', 'notice.php', 'notices.php', 'photo_gallery.php', 'video_gallery.php', 'result.php', 'routine.php', 'student_info.php', 'student_of_the_year.php','review.php', 'teachers.php'
+    'index.php', 'about.php', 'contact.php', 'admission.php', 'event.php', 'forms.php', 'head_teacher.php', 'chairman.php', 'management_committee.php', 'notice.php', 'notices.php', 'photo_gallery.php', 'video_gallery.php', 'result.php', 'routine.php', 'student_info.php', 'student_of_the_year.php','review.php','complaint.php', 'teachers.php'
 ];
 foreach ($staticPages as $page) {
     $urls[] = $baseUrl . $page;

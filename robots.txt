@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /includes/
+
+Sitemap: http://<?php echo $_SERVER['HTTP_HOST']; ?>/sitemap.php

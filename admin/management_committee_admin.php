@@ -187,8 +187,8 @@ $members = $committee->getAll();
                             </td>
                             <td><?php echo htmlspecialchars($row['full_name']); ?></td>
                             <td><?php echo htmlspecialchars($row['title']); ?></td>
-                            <td><?php echo htmlspecialchars($row['contact_number']); ?></td>
-                            <td><?php echo htmlspecialchars($row['joining_date']); ?></td>
+                            <td><?php echo htmlspecialchars($row['contact_number'] ?? ''); ?></td>
+                            <td><?php echo htmlspecialchars($row['joining_date'] ?? ''); ?></td>
                             <td>
                                 <a href="edit_committee_member.php?id=<?php echo $row['id']; ?>" class="btn btn-primary btn-sm">Edit</a>
                                 <a href="?delete=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Delete this member?');">Delete</a>
